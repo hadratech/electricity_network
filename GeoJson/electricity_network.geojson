@@ -1,0 +1,1305 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::2154",
+      "description": "Mauritania 99 / UTM zone 28N"
+    }
+  },
+  "metadata": {
+    "project": "Réseau Électrique National Mauritanien - Complet",
+    "version": "3.0",
+    "date_creation": "2024-03-20",
+    "description": "Réseau électrique complet incluant centrales, postes HT/MT/BT, lignes interurbaines et distribution urbaine",
+    "statistics": {
+      "power_plants": {
+        "gas": 1,
+        "fuel_oil": 1,
+        "solar_pv": 1,
+        "hydro_interconnection": 1,
+        "total_installed_capacity_mw": 300
+      },
+      "transmission_lines_km": 1435,
+      "distribution_substations": {
+        "ht_90_33kv": 2,
+        "mt_33_15kv": 10,
+        "bt_15_04kv": 250,
+        "total_transformers": 524
+      },
+      "network_lengths_km": {
+        "ht_overhead": 1435,
+        "mt_underground_duct": 450,
+        "bt_overhead": 800,
+        "bt_underground": 400,
+        "service_drops": 1200
+      },
+      "customers": {
+        "residential": 485000,
+        "commercial": 12000,
+        "industrial": 2000,
+        "administrative": 1000,
+        "total_households": 500000
+      }
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "CENTRAL-GAZ-NKTT-NORD",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-15.94, 18.13],
+          [-15.92, 18.13],
+          [-15.92, 18.11],
+          [-15.94, 18.11],
+          [-15.94, 18.13]
+        ]]
+      },
+      "properties": {
+        "feature_type": "PowerPlant",
+        "plant_type": "Gas_Turbine",
+        "globalid": "plant-gas-001",
+        "name": "Centrale Gaz Nouakchott Nord",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "owner": "SOMELEC",
+        "operator": "SOMELEC Production",
+        "commissioning_date": "2018-03-15",
+        "design_life_years": 30,
+        "total_capacity_mw": 120,
+        "available_capacity_mw": 110,
+        "efficiency_lhv_percent": 55.2,
+        "heat_rate_kj_kwh": 6520,
+        "fuel_type": "Natural_Gas",
+        "fuel_source": "Champ_Gaz_GTA",
+        "fuel_pressure_bar": 35,
+        "fuel_consumption_m3h": 24000,
+        "annual_generation_gwh": 850,
+        "capacity_factor_percent": 82,
+        "co2_emissions_tonnes_year": 450000,
+        "nox_emissions_ppm": 25,
+        "noise_level_db": 85,
+        "cooling_system": "Air_Cooled_Condenser",
+        "water_consumption_m3_day": 120,
+        "number_of_turbines": 3,
+        "turbine_specifications": [
+          {
+            "turbine_id": "GT-001",
+            "model": "GE_6F.03",
+            "manufacturer": "General_Electric",
+            "power_output_mw": 40,
+            "exhaust_temp_c": 580,
+            "compression_ratio": 18,
+            "rpm": 7000,
+            "operating_hours": 45000,
+            "last_major_overhaul": "2023-09-15",
+            "next_maintenance": "2024-09-15",
+            "status": "Running"
+          },
+          {
+            "turbine_id": "GT-002",
+            "model": "GE_6F.03",
+            "manufacturer": "General_Electric",
+            "power_output_mw": 40,
+            "exhaust_temp_c": 585,
+            "compression_ratio": 18,
+            "rpm": 7000,
+            "operating_hours": 44500,
+            "last_major_overhaul": "2023-09-20",
+            "next_maintenance": "2024-09-20",
+            "status": "Running"
+          },
+          {
+            "turbine_id": "GT-003",
+            "model": "GE_6F.03",
+            "manufacturer": "General_Electric",
+            "power_output_mw": 40,
+            "exhaust_temp_c": 0,
+            "compression_ratio": 18,
+            "rpm": 0,
+            "operating_hours": 38000,
+            "last_major_overhaul": "2023-06-10",
+            "next_maintenance": "2024-06-10",
+            "status": "Standby"
+          }
+        ],
+        "stepup_transformers": [
+          {
+            "transformer_id": "TRAFO-GAZ-001",
+            "capacity_mva": 150,
+            "voltage_primary_kv": 15,
+            "voltage_secondary_kv": 90,
+            "vector_group": "YNd11",
+            "cooling": "ONAF",
+            "impedance_percent": 12.5
+          }
+        ],
+        "substation": {
+          "name": "Poste Évacuation 90 kV Centrale Gaz",
+          "voltage_kv": 90,
+          "busbar_configuration": "Double_Busbar",
+          "feeders_90kv": [
+            {"name": "Départ Ksar", "destination": "POSTE HT KSAR"},
+            {"name": "Départ Rosso", "destination": "POSTE FRONTIERE ROSSO"},
+            {"name": "Départ Zouérate", "destination": "POSTE ZOUÉRATE"}
+          ]
+        },
+        "employees": {
+          "engineers": 12,
+          "technicians": 35,
+          "operators": 25,
+          "administrative": 13,
+          "total": 85
+        },
+        "financial": {
+          "construction_cost_musd": 180,
+          "annual_o_m_cost_musd": 12,
+          "fuel_cost_usd_mmbtu": 8.5,
+          "lcoe_usd_kwh": 0.095
+        },
+        "created_date": "2017-06-01T08:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "CENTRAL-FUEL-NKTT-SUD",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-16.04, 18.06],
+          [-16.02, 18.06],
+          [-16.02, 18.04],
+          [-16.04, 18.04],
+          [-16.04, 18.06]
+        ]]
+      },
+      "properties": {
+        "feature_type": "PowerPlant",
+        "plant_type": "HFO_Diesel",
+        "globalid": "plant-fuel-001",
+        "name": "Centrale Fuel Lourd Nouakchott Sud",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "owner": "SOMELEC",
+        "operator": "SOMELEC Production",
+        "commissioning_date": "2010-11-20",
+        "design_life_years": 25,
+        "total_capacity_mw": 80,
+        "available_capacity_mw": 72,
+        "efficiency_lhv_percent": 42.5,
+        "specific_fuel_consumption_g_kwh": 220,
+        "fuel_type": "HFO_380",
+        "fuel_sulphur_content_percent": 0.5,
+        "fuel_storage_capacity_litres": 5000000,
+        "fuel_tanks": [
+          {"tank_id": "TANK-001", "capacity_litres": 2000000, "type": "Fixed_Roof"},
+          {"tank_id": "TANK-002", "capacity_litres": 2000000, "type": "Fixed_Roof"},
+          {"tank_id": "TANK-003", "capacity_litres": 1000000, "type": "Day_Tank"}
+        ],
+        "annual_generation_gwh": 480,
+        "capacity_factor_percent": 68,
+        "co2_emissions_tonnes_year": 350000,
+        "so2_emissions_tonnes_year": 450,
+        "particulates_tonnes_year": 25,
+        "cooling_system": "Radiator_Cooling",
+        "water_consumption_m3_day": 80,
+        "number_of_generators": 4,
+        "generator_specifications": [
+          {
+            "generator_id": "GEN-FUEL-001",
+            "engine_model": "Wartsila_20V32",
+            "manufacturer": "Wartsila",
+            "power_output_mw": 20,
+            "rpm": 750,
+            "cylinders": 20,
+            "bore_mm": 320,
+            "stroke_mm": 400,
+            "operating_hours": 65000,
+            "last_major_overhaul": "2023-06-15",
+            "next_maintenance": "2024-06-15",
+            "status": "Running",
+            "oil_consumption_l_h": 12
+          },
+          {
+            "generator_id": "GEN-FUEL-002",
+            "engine_model": "Wartsila_20V32",
+            "power_output_mw": 20,
+            "rpm": 750,
+            "operating_hours": 64000,
+            "status": "Running"
+          },
+          {
+            "generator_id": "GEN-FUEL-003",
+            "engine_model": "Wartsila_20V32",
+            "power_output_mw": 20,
+            "rpm": 750,
+            "operating_hours": 62000,
+            "status": "Running"
+          },
+          {
+            "generator_id": "GEN-FUEL-004",
+            "engine_model": "Wartsila_20V32",
+            "power_output_mw": 20,
+            "rpm": 750,
+            "operating_hours": 55000,
+            "status": "Maintenance"
+          }
+        ],
+        "stepup_transformers": [
+          {
+            "transformer_id": "TRAFO-FUEL-001",
+            "capacity_mva": 100,
+            "voltage_primary_kv": 15,
+            "voltage_secondary_kv": 90,
+            "vector_group": "YNd11",
+            "cooling": "ONAF",
+            "impedance_percent": 11
+          }
+        ],
+        "substation_evacuation": {
+          "name": "Poste Évacuation 90 kV Centrale Fuel",
+          "voltage_kv": 90,
+          "configuration": "Single_Busbar_Sectionalized",
+          "feeders_90kv": [
+            {"name": "Départ Ksar", "destination": "POSTE HT KSAR"},
+            {"name": "Départ Tevragh Zeina", "destination": "POSTE HT TEVRAGH ZEINA"}
+          ]
+        },
+        "employees": {
+          "engineers": 8,
+          "technicians": 25,
+          "operators": 22,
+          "administrative": 10,
+          "total": 65
+        },
+        "financial": {
+          "construction_cost_musd": 120,
+          "annual_o_m_cost_musd": 15,
+          "fuel_cost_usd_tonne": 450,
+          "lcoe_usd_kwh": 0.145
+        },
+        "created_date": "2009-12-01T10:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "CENTRAL-SOLAIRE-TOUJOUNINE",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-15.82, 18.21],
+          [-15.78, 18.21],
+          [-15.78, 18.16],
+          [-15.82, 18.16],
+          [-15.82, 18.21]
+        ]]
+      },
+      "properties": {
+        "feature_type": "PowerPlant",
+        "plant_type": "Solar_PV_Utility_Scale",
+        "globalid": "plant-pv-001",
+        "name": "Parc Solaire Toujounine",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "owner": "SOMELEC",
+        "operator": "SOMELEC Renouvelables",
+        "commissioning_date": "2022-07-01",
+        "design_life_years": 25,
+        "total_capacity_mw": 50,
+        "peak_capacity_mwdc": 55,
+        "inverter_capacity_mwac": 50,
+        "capacity_factor_percent": 21,
+        "annual_generation_gwh": 85,
+        "specific_yield_kwh_kwp": 1700,
+        "panel_technology": "Mono_Si_PERC",
+        "panel_model": "LONGi_LR4_72HPH_400M",
+        "panel_power_wp": 400,
+        "panel_efficiency_percent": 20.8,
+        "number_of_panels": 125000,
+        "panel_degradation_yearly_percent": 0.5,
+        "panel_temperature_coefficient_percent": -0.35,
+        "inverter_model": "SMA_Sunny_Central_2500SC",
+        "number_of_inverters": 25,
+        "inverter_capacity_kw": 2000,
+        "inverter_efficiency_percent": 98.6,
+        "tracker_system": "Single_Axis_North_South",
+        "tracker_angle_degrees": 45,
+        "surface_hectares": 150,
+        "solar_irradiation": {
+          "ghi_kwh_m2_year": 2100,
+          "dni_kwh_m2_year": 2200,
+          "average_peak_sun_hours": 5.8
+        },
+        "energy_storage": {
+          "type": "BESS_Li_Ion_LFP",
+          "capacity_mwh": 20,
+          "power_mw": 10,
+          "duration_hours": 2,
+          "battery_manufacturer": "CATL",
+          "number_of_containers": 5,
+          "each_container_mwh": 4,
+          "cycle_efficiency_percent": 92,
+          "cycles_lifetime": 6000,
+          "state_of_charge_percent": 85,
+          "status": "Charging"
+        },
+        "stepup_transformer": [
+          {
+            "transformer_id": "TRAFO-PV-001",
+            "capacity_mva": 60,
+            "voltage_primary_kv": 0.8,
+            "voltage_secondary_kv": 33,
+            "vector_group": "Dyn11",
+            "cooling": "ONAN"
+          }
+        ],
+        "substation_evacuation": {
+          "name": "Poste Évacuation 33 kV Parc Solaire",
+          "voltage_kv": 33,
+          "configuration": "Single_Busbar",
+          "feeders_33kv": [
+            {"name": "Départ Tevragh Zeina", "destination": "POSTE HT TEVRAGH ZEINA 90/33 kV"}
+          ]
+        },
+        "environmental_benefits": {
+          "co2_avoided_tonnes_year": 52000,
+          "equivalent_trees_planted": 850000,
+          "households_equivalent": 25000
+        },
+        "monitoring_system": {
+          "weather_station": true,
+          "pyranometers": 5,
+          "panel_temp_sensors": 20,
+          "string_monitoring": true,
+          "cleaning_robots": 2,
+          "cleaning_frequency_days": 15,
+          "soiling_loss_percent": 3.5
+        },
+        "employees": {
+          "engineers": 5,
+          "technicians": 12,
+          "security": 8,
+          "total": 25
+        },
+        "financial": {
+          "construction_cost_musd": 65,
+          "annual_o_m_cost_musd": 1.8,
+          "ppa_tariff_usd_kwh": 0.048,
+          "lcoe_usd_kwh": 0.042,
+          "irr_percent": 12
+        },
+        "created_date": "2021-09-15T09:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "INTERCONNEXION-ROSSO-OMVS",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-16.30, 16.55]
+      },
+      "properties": {
+        "feature_type": "Interconnection_Substation",
+        "globalid": "interco-rosso-omvs-001",
+        "name": "Poste Frontière 225/90 kV Rosso - OMVS",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "owner": "SOMELEC / OMVS",
+        "operator": "SOMELEC Transport",
+        "commissioning_date": "2005-01-01",
+        "purpose": "Importation hydroélectrique depuis OMVS",
+        "source": {
+          "organization": "OMVS (Organisation Mise en Valeur Fleuve Sénégal)",
+          "countries": "Mali_Sénégal_Mauritanie",
+          "primary_dam": "Manantali (Mali)",
+          "dam_capacity_mw": 200,
+          "dam_annual_production_gwh": 740
+        },
+        "technical_specifications": {
+          "import_capacity_mw": 50,
+          "actual_import_mw": 35,
+          "voltage_incoming_kv": 225,
+          "voltage_outgoing_kv": 90,
+          "frequency_hz": 50,
+          "synchronization": "Automatic",
+          "protection_protocol": "IEC_61850"
+        },
+        "autotransformers": [
+          {
+            "id": "AUTO-TRAFO-ROSSO-001",
+            "capacity_mva": 100,
+            "voltage_primary_kv": 225,
+            "voltage_secondary_kv": 90,
+            "tertiary_voltage_kv": 33,
+            "vector_group": "YNa0d1",
+            "cooling": "ONAF",
+            "tap_changer": "On_Load",
+            "tap_positions": 17,
+            "current_tap": 5,
+            "status": "Running",
+            "temperature_oil_c": 58,
+            "temperature_winding_c": 72
+          },
+          {
+            "id": "AUTO-TRAFO-ROSSO-002",
+            "capacity_mva": 100,
+            "voltage_primary_kv": 225,
+            "voltage_secondary_kv": 90,
+            "tertiary_voltage_kv": 33,
+            "vector_group": "YNa0d1",
+            "cooling": "ONAF",
+            "status": "Standby",
+            "temperature_oil_c": 30
+          }
+        ],
+        "energy_meters": {
+          "import_meter": {
+            "id": "METER-IMPORT-001",
+            "type": "Bidirectional",
+            "cumulative_import_mwh": 4500000,
+            "cumulative_export_mwh": 15000,
+            "current_flow_mw": -35,
+            "accuracy_class": 1
+          }
+        },
+        "line_to_nouakchott": {
+          "name": "Ligne 90 kV Rosso - Nouakchott",
+          "length_km": 205,
+          "conductor": "ACSR_HAWK_281mm²",
+          "capacity_mva": 100
+        },
+        "financial": {
+          "annual_import_cost_musd": 12,
+          "average_import_tariff_usd_kwh": 0.065
+        },
+        "created_date": "2004-06-01T10:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "POSTE-HT-01-KSAR",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-15.96, 18.10]
+      },
+      "properties": {
+        "feature_type": "HT_Substation",
+        "voltage_level": "90/33 kV",
+        "globalid": "poste-ht-ksar-001",
+        "name": "POSTE HT 90/33 kV Ksar - Nouakchott Centre",
+        "quartier": "Ksar",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "commissioning_date": "2015-01-15",
+        "owner": "SOMELEC",
+        "operator": "SOMELEC Transport",
+        "land_surface_m2": 2500,
+        "fencing_type": "Mur_Béton_H2m",
+        "security": "Vidéo_Gardiennage",
+        "voltage_levels": {
+          "high_voltage_kv": 90,
+          "medium_voltage_kv": 33,
+          "auxiliary_voltage_v": 400
+        },
+        "busbar_configuration": {
+          "90kv": "Double_Busbar_Couplable",
+          "33kv": "Simple_Busbar_Sectionnée"
+        },
+        "power_transformers": [
+          {
+            "id": "TRAFO-POSTE-KSAR-001",
+            "type": "Power_Transformer",
+            "capacity_mva": 20,
+            "voltage_ratio": "90/33 kV",
+            "vector_group": "YNd11",
+            "cooling": "ONAN/ONAF",
+            "impedance_percent": 10.5,
+            "tap_changer": "On_Load_90kV",
+            "manufacturer": "SIEMENS",
+            "year_manufactured": 2014,
+            "serial_number": "SN-SIEM-2014-90-01",
+            "oil_volume_litres": 12000,
+            "weight_tonnes": 65,
+            "temperature_oil_c": 62,
+            "temperature_winding_c": 78,
+            "load_mva": 14.5,
+            "load_percent": 72.5,
+            "status": "Running",
+            "last_dga_analysis": "2024-02-15",
+            "dga_status": "Normal",
+            "next_maintenance": "2024-08-15"
+          },
+          {
+            "id": "TRAFO-POSTE-KSAR-002",
+            "type": "Power_Transformer",
+            "capacity_mva": 20,
+            "voltage_ratio": "90/33 kV",
+            "vector_group": "YNd11",
+            "cooling": "ONAN/ONAF",
+            "impedance_percent": 10.8,
+            "manufacturer": "ABB",
+            "year_manufactured": 2014,
+            "serial_number": "SN-ABB-2014-90-02",
+            "oil_volume_litres": 12000,
+            "weight_tonnes": 66,
+            "temperature_oil_c": 58,
+            "temperature_winding_c": 72,
+            "load_mva": 13.5,
+            "load_percent": 67.5,
+            "status": "Running",
+            "last_dga_analysis": "2024-02-20",
+            "dga_status": "Normal",
+            "next_maintenance": "2024-08-20"
+          }
+        ],
+        "feeder_bays_90kv": [
+          {
+            "bay_id": "90KV-INCOMER-01",
+            "type": "Incomer",
+            "source": "CENTRALE GAZ NORD",
+            "breaker": {
+              "type": "SF6_Circuit_Breaker",
+              "model": "SIEMENS_3AP1FG",
+              "rated_voltage_kv": 90,
+              "rated_current_a": 2000,
+              "breaking_capacity_ka": 40,
+              "status": "Closed"
+            },
+            "disconnectors": 2,
+            "current_transformer_ratio": "800/5A",
+            "voltage_transformer_ratio": "90000/110V"
+          },
+          {
+            "bay_id": "90KV-INCOMER-02",
+            "type": "Incomer",
+            "source": "CENTRALE FUEL SUD",
+            "breaker": {
+              "type": "SF6_Circuit_Breaker",
+              "rated_voltage_kv": 90,
+              "rated_current_a": 2000,
+              "breaking_capacity_ka": 40,
+              "status": "Closed"
+            }
+          },
+          {
+            "bay_id": "90KV-LINE-ROSSO",
+            "type": "Line_Feeder",
+            "destination": "POSTE FRONTIERE ROSSO",
+            "line_length_km": 205,
+            "breaker": {
+              "type": "SF6_Circuit_Breaker",
+              "rated_current_a": 1600,
+              "breaking_capacity_ka": 40,
+              "status": "Closed"
+            },
+            "protection_relay": "Siemens_SIPROTEC_5"
+          },
+          {
+            "bay_id": "90KV-LINE-ZOUERATE",
+            "type": "Line_Feeder",
+            "destination": "POSTE ZOUÉRATE",
+            "line_length_km": 650,
+            "breaker": {
+              "type": "SF6_Circuit_Breaker",
+              "rated_current_a": 1600,
+              "breaking_capacity_ka": 40,
+              "status": "Closed"
+            },
+            "protection_relay": "Siemens_SIPROTEC_5"
+          },
+          {
+            "bay_id": "90KV-COUPLAGE",
+            "type": "Bus_Coupler",
+            "breaker": {
+              "status": "Open",
+              "function": "Normalement_Ouvert"
+            }
+          }
+        ],
+        "feeder_bays_33kv": [
+          {
+            "bay_id": "33KV-FEEDER-KSAR-MARCHE",
+            "destination": "POSTE MT KSAR MARCHE",
+            "cable_type": "XLPE_300mm²",
+            "length_km": 1.2,
+            "breaker": {
+              "type": "Vacuum_Circuit_Breaker",
+              "rated_voltage_kv": 33,
+              "rated_current_a": 800,
+              "breaking_capacity_ka": 25,
+              "status": "Closed"
+            }
+          },
+          {
+            "bay_id": "33KV-FEEDER-KSAR-OUEST",
+            "destination": "POSTE MT KSAR OUEST",
+            "cable_type": "XLPE_240mm²",
+            "length_km": 1.5,
+            "status": "Closed"
+          },
+          {
+            "bay_id": "33KV-FEEDER-KSAR-EST",
+            "destination": "POSTE MT KSAR EST",
+            "cable_type": "XLPE_240mm²",
+            "length_km": 1.0,
+            "status": "Closed"
+          },
+          {
+            "bay_id": "33KV-FEEDER-KSAR-SUD",
+            "destination": "POSTE MT KSAR SUD",
+            "cable_type": "XLPE_300mm²",
+            "length_km": 1.8,
+            "status": "Closed"
+          },
+          {
+            "bay_id": "33KV-FEEDER-KSAR-NORD",
+            "destination": "POSTE MT KSAR NORD",
+            "cable_type": "XLPE_240mm²",
+            "length_km": 1.3,
+            "status": "Closed"
+          }
+        ],
+        "auxiliary_systems": {
+          "battery_110vdc": {
+            "type": "NiCd",
+            "capacity_ah": 200,
+            "autonomy_hours": 12
+          },
+          "battery_48vdc": {
+            "type": "Lead_Acid_VRLA",
+            "capacity_ah": 100,
+            "autonomy_hours": 8
+          },
+          "diesel_generator": {
+            "capacity_kva": 100,
+            "fuel_autonomy_hours": 24
+          }
+        },
+        "control_system": {
+          "scada": "SIEMENS_Spectrum_Power",
+          "protocol": "IEC_61850",
+          "rtu": "SIEMENS_SICAM_AK3",
+          "hmi_local": true,
+          "remote_control_from": "Dispatching_National_Nouakchott"
+        },
+        "reliability_statistics_2023": {
+          "saidi_minutes": 15,
+          "saifi_interruptions": 0.2,
+          "availability_percent": 99.97
+        },
+        "created_date": "2014-06-01T08:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "POSTE-MT-01-KSAR-MARCHE",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-15.97, 18.09]
+      },
+      "properties": {
+        "feature_type": "MT_Distribution_Substation",
+        "voltage_level": "33/15 kV",
+        "globalid": "poste-mt-ksar-marche-001",
+        "name": "POSTE MT 33/15 kV Ksar Marché",
+        "quartier": "Ksar",
+        "parent_ht_substation": "POSTE HT KSAR",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "installation_type": "Outdoor",
+        "enclosure": "Clôture_Métallique",
+        "surface_m2": 400,
+        "transformer": {
+          "id": "TRAFO-MT-KSAR-MARCHE-001",
+          "type": "Hermetic_Sealed",
+          "capacity_mva": 10,
+          "voltage_ratio": "33/15 kV",
+          "vector_group": "Dyn11",
+          "cooling": "ONAN",
+          "impedance_percent": 6.5,
+          "manufacturer": "SCHNEIDER",
+          "oil_volume_litres": 2000,
+          "temperature_oil_c": 55,
+          "load_mva": 7.2,
+          "load_percent": 72,
+          "status": "Running"
+        },
+        "switchgear_33kv": {
+          "type": "GIS_SF6",
+          "manufacturer": "Schneider_GMA",
+          "incomers": 2,
+          "feeders": 4
+        },
+        "switchgear_15kv": {
+          "type": "Metal_Clad_AIS",
+          "manufacturer": "SIEMENS_NXAIR",
+          "busbar_current_a": 630,
+          "feeders": [
+            {"id": "15KV-FEEDER-SECTEUR1", "destination": "POSTE BT KSAR SECTEUR 1", "cable_type": "XLPE_150mm²", "length_km": 0.85, "breaker_status": "Closed"},
+            {"id": "15KV-FEEDER-SECTEUR2", "destination": "POSTE BT KSAR SECTEUR 2", "cable_type": "XLPE_95mm²", "length_km": 0.95, "breaker_status": "Closed"},
+            {"id": "15KV-FEEDER-SECTEUR3", "destination": "POSTE BT KSAR SECTEUR 3", "cable_type": "XLPE_150mm²", "length_km": 0.75, "breaker_status": "Closed"},
+            {"id": "15KV-FEEDER-SECTEUR4", "destination": "POSTE BT KSAR SECTEUR 4", "cable_type": "XLPE_95mm²", "length_km": 1.1, "breaker_status": "Closed"},
+            {"id": "15KV-FEEDER-SECTEUR5", "destination": "POSTE BT KSAR SECTEUR 5", "cable_type": "XLPE_150mm²", "length_km": 0.92, "breaker_status": "Closed"}
+          ]
+        },
+        "served_customers": {
+          "residential": 8200,
+          "commercial": 250,
+          "administrative": 50,
+          "total": 8500
+        },
+        "peak_load_mva": 7.2,
+        "off_peak_load_mva": 3.5,
+        "created_date": "2017-11-01T09:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "POSTE-BT-KSAR-SECTEUR1-01",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-15.972, 18.088]
+      },
+      "properties": {
+        "feature_type": "BT_Distribution_Transformer",
+        "voltage_level": "15/0.4 kV",
+        "globalid": "poste-bt-ksar-s1-001",
+        "name": "POSTE BT 15/0.4 kV Ksar Secteur 1 - N°1",
+        "quartier": "Ksar",
+        "secteur": "Secteur 1",
+        "parent_mt_substation": "POSTE MT KSAR MARCHE",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "installation_type": "Compact_Pad_Mounted",
+        "manufacturer": "SCHNEIDER_ELECTRIC",
+        "model": "TRIHAL_630",
+        "serial_number": "SN2020-03-1452",
+        "rated_power_kva": 630,
+        "voltage_ratio": "15000/400V",
+        "vector_group": "Dyn11",
+        "cooling": "AN",
+        "impedance_percent": 4.5,
+        "no_load_losses_w": 1300,
+        "load_losses_w": 6500,
+        "efficiency_at_75_percent": 98.2,
+        "temperature_rise_class": "F",
+        "insulation_class": "H",
+        "current_load_kva": 480,
+        "load_percent": 76.2,
+        "temperature_winding_c": 68,
+        "temperature_ambient_c": 32,
+        "lv_feeder_circuits": [
+          {"circuit_id": "L1", "phase": "L1-N", "current_a": 320, "cable": "AL_150mm²", "customers": 48},
+          {"circuit_id": "L2", "phase": "L2-N", "current_a": 305, "cable": "AL_150mm²", "customers": 45},
+          {"circuit_id": "L3", "phase": "L3-N", "current_a": 315, "cable": "AL_150mm²", "customers": 52},
+          {"circuit_id": "RUE-PRINCIPALE", "phase": "3P+N", "current_a": 180, "cable": "CU_95mm²", "customers": 35},
+          {"circuit_id": "ECLAIRAGE-PUBLIC", "phase": "3P+N", "current_a": 45, "cable": "CU_25mm²", "lights": 85}
+        ],
+        "protection_devices": {
+          "mv_side": {
+            "type": "Fuse_switch",
+            "fuse_rating_a": 63,
+            "manufacturer": "SIBA"
+          },
+          "lv_side": {
+            "main_circuit_breaker": {
+              "type": "MCCB",
+              "rating_a": 1000,
+              "adjustable": "400-1000A",
+              "setpoint_a": 800
+            },
+            "feeder_breakers": {
+              "type": "MCB",
+              "rating_a": 400,
+              "quantity": 6
+            }
+          }
+        },
+        "metering": {
+          "type": "Smart_Meter",
+          "model": "ITRON_ACE6000",
+          "communication": "GPRS_RF",
+          "readings_per_day": 96
+        },
+        "voltage_regulation": {
+          "type": "Fixed_Tap",
+          "current_tap": 3,
+          "voltage_on_load_v": 395,
+          "voltage_drop_percent": 1.25
+        },
+        "grounding_system": {
+          "type": "TT",
+          "earth_resistance_ohm": 2.8,
+          "last_measurement": "2024-01-15"
+        },
+        "served_customers": {
+          "residential": 260,
+          "commercial": 15,
+          "administrative": 3,
+          "total": 278
+        },
+        "peak_load_occurrence": "19:30-21:30",
+        "last_maintenance": "2024-01-15",
+        "next_maintenance": "2024-07-15",
+        "created_date": "2020-01-20T08:30:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "LINE-HT-NKTT-ROSSO",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-15.96, 18.10],
+          [-16.05, 17.90],
+          [-16.10, 17.70],
+          [-16.18, 17.50],
+          [-16.20, 17.30],
+          [-16.25, 17.10],
+          [-16.28, 16.90],
+          [-16.30, 16.80],
+          [-16.30, 16.55]
+        ]
+      },
+      "properties": {
+        "feature_type": "Transmission_Line",
+        "voltage_level": "90 kV",
+        "circuit_number": 1,
+        "globalid": "line-ht-090-kv-nktt-rosso-001",
+        "name": "Ligne HT 90 kV Nouakchott - Rosso (Circuit 1)",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "owner": "SOMELEC",
+        "operator": "SOMELEC Transport",
+        "commissioning_date": "2005-01-01",
+        "line_type": "Aérienne_Simple_Terne",
+        "start_substation": "POSTE HT KSAR 90/33 kV",
+        "end_substation": "POSTE FRONTIERE ROSSO 225/90 kV",
+        "route_length_km": 205,
+        "straight_line_km": 195,
+        "conductor_characteristics": {
+          "phase_conductor": {
+            "type": "ACSR",
+            "code_name": "HAWK",
+            "cross_section_mm2": 281.1,
+            "stranding": "26/7",
+            "diameter_mm": 21.8,
+            "dc_resistance_ohm_km": 0.1195,
+            "rated_current_a": 600,
+            "breaking_load_kn": 87.5
+          },
+          "earth_wire": {
+            "type": "Galvanized_Steel",
+            "cross_section_mm2": 50,
+            "diameter_mm": 9.0,
+            "includes_opgw": false
+          }
+        },
+        "tower_design": {
+          "type": "Lattice_Steel_Suspension",
+          "configuration": "Horizontal_Flat",
+          "number_of_towers": 680,
+          "suspension_towers": 620,
+          "tension_towers": 60,
+          "average_span_m": 300,
+          "maximum_span_m": 450,
+          "tower_height_m": 25,
+          "tower_base_width_m": 6,
+          "tower_top_width_m": 4,
+          "phase_spacing_m": 4.5,
+          "ground_clearance_m": 12
+        },
+        "insulators": {
+          "type": "Toughened_Glass_Disc",
+          "disc_diameter_mm": 280,
+          "discs_per_string": 7,
+          "creepage_distance_mm": 380,
+          "mechanical_strength_kn": 120
+        },
+        "electrical_parameters": {
+          "positive_sequence_resistance_ohm_km": 0.1195,
+          "positive_sequence_reactance_ohm_km": 0.42,
+          "positive_sequence_capacitance_nf_km": 8.8,
+          "zero_sequence_resistance_ohm_km": 0.35,
+          "zero_sequence_reactance_ohm_km": 1.2,
+          "surge_impedance_ohm": 380,
+          "sil_mw": 21
+        },
+        "corridor_right_of_way_m": 30,
+        "max_operating_temperature_c": 75,
+        "max_ambient_temperature_c": 50,
+        "min_ambient_temperature_c": 10,
+        "wind_loading_ms": 35,
+        "icing": false,
+        "environmental_conditions": {
+          "corrosion_category": "C3_Medium",
+          "pollution_level": "Medium",
+          "is_in_desert": false,
+          "vegetation_type": "Savane_Arbustive",
+          "flood_risk": "Faible"
+        },
+        "intermediate_substations": [
+          {"name": "POSTE 90/33 KV BOUTILIMIT", "pk_km": 95},
+          {"name": "POSTE 90/33 KV MEDERDRA", "pk_km": 155}
+        ],
+        "protection": {
+          "main_protection": "Distance_Protection_21",
+          "backup_protection": "Overcurrent_51_51N",
+          "reclosing": "Single_Shot_3_Phase",
+          "communication": "Power_Line_Carrier"
+        },
+        "maintenance_history": {
+          "last_patrol_inspection": "2024-02-10",
+          "last_thermographic_inspection": "2024-01-25",
+          "last_corona_inspection": "2023-11-15",
+          "vegetation_last_cleared": "2023-10-20",
+          "insulators_washed": "2023-06-15"
+        },
+        "failure_statistics": {
+          "yearly_outages_2023": 3,
+          "average_outage_duration_hours": 2.5,
+          "main_causes": ["Foudre", "Vent_Violent"],
+          "availability_percent": 99.91
+        },
+        "created_date": "2004-08-01T08:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "LINE-HT-NKTT-ZOUERATE",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-15.96, 18.10],
+          [-15.90, 18.50],
+          [-15.85, 18.90],
+          [-15.75, 19.30],
+          [-15.60, 19.70],
+          [-15.45, 20.10],
+          [-15.30, 20.50],
+          [-15.15, 20.90],
+          [-14.95, 21.30],
+          [-14.75, 21.70],
+          [-14.55, 22.10],
+          [-14.35, 22.50]
+        ]
+      },
+      "properties": {
+        "feature_type": "Transmission_Line",
+        "voltage_level": "90 kV",
+        "circuit_number": 1,
+        "globalid": "line-ht-090-kv-nktt-zouerate-001",
+        "name": "Ligne HT 90 kV Nouakchott - Zouérate",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "owner": "SOMELEC",
+        "operator": "SOMELEC Transport",
+        "commissioning_date": "2012-06-15",
+        "line_type": "Aérienne_Simple_Terne",
+        "start_substation": "POSTE HT KSAR 90/33 kV",
+        "end_substation": "POSTE ZOUERATE MINE 90/33 kV",
+        "route_length_km": 650,
+        "conductor_characteristics": {
+          "phase_conductor": {
+            "type": "ACSR",
+            "code_name": "GROSBEAK",
+            "cross_section_mm2": 322,
+            "rated_current_a": 700,
+            "dc_resistance_ohm_km": 0.0893
+          },
+          "earth_wire": {
+            "type": "Galvanized_Steel",
+            "includes_opgw": true,
+            "opgw_fiber_count": 24
+          }
+        },
+        "tower_design": {
+          "type": "Lattice_Steel_Desert_Design",
+          "configuration": "Horizontal",
+          "number_of_towers": 2150,
+          "suspension_towers": 1950,
+          "tension_towers": 200,
+          "average_span_m": 302,
+          "ground_clearance_m": 15,
+          "special_foundations": "Rock_Anchor_Desert_Plate"
+        },
+        "environmental_conditions": {
+          "terrain": "Désert_Saharien",
+          "sand_dune_encroachment": "Élevé",
+          "sand_storm_frequency": "Fréquent",
+          "extreme_max_temp_c": 55,
+          "extreme_min_temp_c": 5,
+          "diurnal_variation_c": 30,
+          "corrosion_category": "C4_High",
+          "sand_abrasion": true,
+          "camel_crossing_risk": "Modéré"
+        },
+        "intermediate_substations": [
+          {"name": "POSTE 90/33 KV AKJOUJT", "pk_km": 230, "altitude_m": 250},
+          {"name": "POSTE 90/33 KV ATAR", "pk_km": 430, "altitude_m": 350},
+          {"name": "POSTE 90/33 KV CHOUM", "pk_km": 580, "altitude_m": 400}
+        ],
+        "desert_access": {
+          "service_road_type": "Piste_4x4",
+          "nearest_fuel_station_km": 120,
+          "satellite_phone_required": true,
+          "emergency_water_points": [
+            {"name": "Puits_Akjoujt", "pk": 230},
+            {"name": "Puits_Atar", "pk": 430}
+          ]
+        },
+        "failure_statistics": {
+          "yearly_outages_2023": 8,
+          "main_causes": ["Tempête_Sable", "Foudre_Désert", "Coupure_Publique"],
+          "availability_percent": 99.75,
+          "longest_outage_hours": 12
+        },
+        "created_date": "2011-03-15T09:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "LINE-HT-FUTUR-NKTT-KIFFA",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-15.96, 18.10],
+          [-15.50, 17.50],
+          [-15.00, 17.00],
+          [-14.50, 16.50],
+          [-13.80, 16.10]
+        ]
+      },
+      "properties": {
+        "feature_type": "Transmission_Line_Future",
+        "voltage_level": "90 kV",
+        "circuit_number": 1,
+        "globalid": "line-ht-090-kv-nktt-kiffa-futur",
+        "name": "FUTUR Ligne HT 90 kV Nouakchott - Kiffa",
+        "operationalstatus": "Under_Construction",
+        "lifecycle": "En_Développement",
+        "owner": "SOMELEC",
+        "operator": "SOMELEC Transport (futur)",
+        "expected_commissioning": "2025-12-01",
+        "route_length_km": 580,
+        "progress_construction_percent": 35,
+        "conductor_characteristics": {
+          "phase_conductor": {
+            "type": "ACSR",
+            "code_name": "GROSBEAK",
+            "cross_section_mm2": 322,
+            "rated_current_a": 700
+          }
+        },
+        "budget": {
+          "total_musd": 180,
+          "funding_sources": {
+            "World_Bank_IDA": 100,
+            "AFD": 50,
+            "SOMELEC": 30
+          },
+          "cost_breakdown": {
+            "engineering": 18,
+            "procurement": 95,
+            "construction": 55,
+            "contingency": 12
+          }
+        },
+        "contractors": [
+          {"name": "KEC_International", "scope": "Fourniture_Construction", "contract_value_musd": 130},
+          {"name": "SIEMENS_Energy", "scope": "Sous_Stations", "contract_value_musd": 45}
+        ],
+        "socio_economic_impact": {
+          "new_customers_connected": 35000,
+          "electrification_rate_improvement_percent": 12,
+          "jobs_created_construction": 450,
+          "jobs_created_permanent": 120
+        },
+        "created_date": "2023-01-10T08:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "LINE-MT-URBAIN-EXAMPLE",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-15.96, 18.10],
+          [-15.965, 18.095],
+          [-15.97, 18.09],
+          [-15.971, 18.089],
+          [-15.972, 18.088]
+        ]
+      },
+      "properties": {
+        "feature_type": "Distribution_Line_MT",
+        "voltage_level": "15 kV",
+        "globalid": "line-mt-15kv-ksar-s1-001",
+        "name": "Câble MT 15 kV Alimentation Poste BT Ksar S1",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "installation_method": "Underground_Duct",
+        "conductor_type": "XLPE_Aluminium",
+        "cross_section_mm2": 150,
+        "rated_voltage_kv": 15,
+        "rated_current_a": 280,
+        "length_m": 850,
+        "duct_configuration": {
+          "duct_type": "PEHD_Double",
+          "duct_diameter_mm": 160,
+          "number_of_ducts": 2,
+          "ducts_in_service": 1,
+          "available_for_future": 1,
+          "burial_depth_cm": 80,
+          "warning_tape": "Oui_Rouge",
+          "concrete_slabs": "Oui",
+          "manholes": [
+            {"id": "MH-KSAR-001", "type": "Type_L1", "distance_m": 0},
+            {"id": "MH-KSAR-002", "type": "Type_L2", "distance_m": 280},
+            {"id": "MH-KSAR-003", "type": "Type_L1", "distance_m": 560},
+            {"id": "MH-KSAR-004", "type": "Type_L2", "distance_m": 850}
+          ]
+        },
+        "location_markers": {
+          "surface_markers": "Bornes_Béton_Rouge",
+          "gps_surveyed": true,
+          "gis_accuracy_cm": 15
+        },
+        "electrical_parameters": {
+          "resistance_ohm_km": 0.206,
+          "reactance_ohm_km": 0.095,
+          "capacitance_uf_km": 0.35
+        },
+        "start_node": "POSTE MT KSAR MARCHE",
+        "end_node": "POSTE BT KSAR SECTEUR 1",
+        "last_maintenance": "2023-09-15",
+        "created_date": "2020-01-25T10:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "RESEAU-BT-TYPE-URBAIN",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-15.972, 18.088],
+          [-15.9725, 18.087],
+          [-15.9730, 18.086]
+        ]
+      },
+      "properties": {
+        "feature_type": "Distribution_Line_BT",
+        "voltage_level": "400/230 V",
+        "globalid": "line-bt-400v-ksar-s1-rue1",
+        "name": "Ligne BT 400V Rue Principale Secteur 1 Ksar",
+        "operationalstatus": "In Service",
+        "lifecycle": "Active",
+        "installation_method": "Overhead_Twisted_Cable",
+        "conductor_type": "Aluminium_Torsadé",
+        "cross_section_mm2": 70,
+        "number_of_conductors": 4,
+        "configuration": "3_Phases_Neutre",
+        "rated_current_a": 225,
+        "length_m": 250,
+        "pole_specifications": {
+          "type": "Béton_Armé",
+          "height_m": 9,
+          "spacing_m": 35,
+          "number_of_poles": 8,
+          "pole_numbering": "KSAR-S1-P001 à P008"
+        },
+        "service_drops": {
+          "number_connected": 45,
+          "cable_type": "Aluminium_Torsadé_4x16mm²",
+          "average_length_m": 12,
+          "meter_location": "Coffret_Intégré_Poteau"
+        },
+        "street_lighting": {
+          "integrated": true,
+          "fixture_type": "LED_60W",
+          "spacing_m": 35,
+          "total_fixtures": 8,
+          "control": "Cellule_Photoélectrique"
+        },
+        "voltage_profile": {
+          "sending_voltage_v": 395,
+          "receiving_voltage_v": 388,
+          "voltage_drop_percent": 1.8,
+          "max_allowed_drop_percent": 5
+        },
+        "last_maintenance": "2023-12-01",
+        "created_date": "2020-02-01T10:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "RESUME-SYSTEME-ELECTRIQUE",
+      "geometry": null,
+      "properties": {
+        "feature_type": "System_Summary",
+        "country": "Mauritanie",
+        "operator": "SOMELEC",
+        "year": 2024,
+        "generation_mix": {
+          "installed_capacity_mw": 300,
+          "gas_mw": 120,
+          "heavy_fuel_oil_mw": 80,
+          "solar_pv_mw": 50,
+          "hydro_import_mw": 50,
+          "peak_demand_mw": 245,
+          "annual_energy_gwh": 1650
+        },
+        "transmission_network": {
+          "lines_90kv_km": 1435,
+          "lines_225kv_km": 0,
+          "substations_ht_90_33kv": 3,
+          "interconnection_points": 1
+        },
+        "distribution_network_nouakchott": {
+          "area_km2": 50000,
+          "population_density": "Variable",
+          "quartiers_electrifies": 2,
+          "structure_per_quartier": {
+            "postes_ht_90_33kv": 1,
+            "postes_mt_33_15kv": 5,
+            "postes_bt_15_04kv": 25
+          },
+          "total_postes_ht": 2,
+          "total_postes_mt": 10,
+          "total_postes_bt": 250,
+          "total_transformers_installed": 524,
+          "mt_underground_cable_km": 450,
+          "bt_network_km": 1200,
+          "households_connected": 500000,
+          "electrification_rate_percent": 95
+        },
+        "reliability_indicators": {
+          "saidi_minutes_2023": 185,
+          "saifi_interruptions_2023": 3.2,
+          "caidi_minutes": 58,
+          "asai_percent": 99.96
+        },
+        "losses": {
+          "technical_losses_percent": 12.5,
+          "non_technical_losses_percent": 8.3,
+          "total_losses_percent": 20.8
+        },
+        "tariffs": {
+          "residential_low_usd_kwh": 0.09,
+          "residential_medium_usd_kwh": 0.12,
+          "commercial_usd_kwh": 0.15,
+          "industrial_usd_kwh": 0.11
+        },
+        "future_projects": {
+          "kiffa_line_90kv_km": 580,
+          "expected_completion": "2025-12",
+          "additional_solar_mw": 100,
+          "wind_potential_mw": 150,
+          "battery_storage_planned_mwh": 50
+        }
+      }
+    }
+  ]
+}

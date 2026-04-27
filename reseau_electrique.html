@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇲🇷 SIG Mauritanie - Wilayas & Réseau Électrique</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --mauritania-jaune: #FFD700;
+            --mauritania-vert: #00A95C;
+            --mauritania-orange: #D01C1F;
+            --bg-fonce: #1a2b3c;
+            --bg-moyen: #2c3e50;
+            --bg-clair: #34495e;
+            --border: #405d7a;
+            --text: #ecf0f1;
+            --text-muted: #bdc3c7;
+            --shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-fonce);
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text);
+        }
+
+        .container { display: flex; flex-direction: column; height: 100vh; }
+
+        .header {
+            background: linear-gradient(135deg, var(--mauritania-vert) 0%, var(--mauritania-jaune) 50%, var(--mauritania-orange) 100%);
+            padding: 8px 16px;
+            border-bottom: 3px solid var(--mauritania-jaune);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--bg-fonce);
+            z-index: 1000;
+            font-size: 0.9em;
+        }
+
+        .header h1 { font-size: 1.2em; display: flex; align-items: center; gap: 8px; }
+
+        .header-stats {
+            background: rgba(26, 43, 60, 0.9);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            border-left: 3px solid var(--mauritania-jaune);
+        }
+
+        .main-content { display: flex; flex: 1; min-height: 0; position: relative; }
+        .map-container { flex: 1; position: relative; }
+        #map { height: 100%; width: 100%; background: #1a2b3c; }
+
+        /* Barre d'outils */
+        .main-toolbar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 2px solid var(--mauritania-jaune);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: var(--shadow);
+            min-width: 180px;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .tool-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border);
+        }
+        .tool-group:last-child { border-bottom: none; }
+
+        .tool-group-title {
+            color: var(--mauritania-jaune);
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tool-btn {
+            background: var(--bg-clair);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 5px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            width: 100%;
+            border-left: 3px solid transparent;
+        }
+        .tool-btn i { width: 14px; text-align: center; color: var(--mauritania-jaune); }
+        .tool-btn:hover { background: var(--border); transform: translateX(2px); border-left-color: var(--mauritania-jaune); }
+        .tool-btn.active { background: linear-gradient(135deg, var(--mauritania-jaune), var(--mauritania-orange)); color: var(--bg-fonce); font-weight: 600; }
+        .tool-btn.active i { color: var(--bg-fonce); }
+
+        /* Affichage coordonnées */
+        .coord-display {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(44, 62, 80, 0.98);
+            padding: 5px 8px;
+            border-radius: 6px;
+            border: 2px solid var(--mauritania-jaune);
+            z-index: 1000;
+            font-family: monospace;
+            font-size: 0.7em;
+            backdrop-filter: blur(5px);
+            min-width: 200px;
+        }
+        .coord-proj { color: var(--mauritania-jaune); font-size: 0.7em; border-bottom: 1px solid var(--border); padding-bottom: 2px; margin-bottom: 2px; }
+        .coord-values { display: flex; justify-content: space-between; }
+        .coord-values span { background: var(--bg-fonce); padding: 2px 4px; border-radius: 3px; }
+
+        /* Légende */
+        .legend {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(44, 62, 80, 0.98);
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid var(--mauritania-jaune);
+            z-index: 1000;
+            min-width: 180px;
+            max-height: 350px;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            font-size: 0.7em;
+        }
+        .legend h4 { color: var(--mauritania-jaune); font-size: 0.8em; margin-bottom: 4px; border-bottom: 1px solid var(--border); padding-bottom: 2px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; }
+        .legend-color { width: 12px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .electric-legend-section { margin-top: 6px; padding-top: 4px; border-top: 1px solid var(--border); }
+        .electric-legend-section h5 { color: #f39c12; font-size: 0.7em; margin: 0 0 3px 0; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-moyen);
+            border-left: 2px solid var(--mauritania-jaune);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            font-size: 0.8em;
+        }
+        .panel { padding: 8px; border-bottom: 1px solid var(--border); }
+        .panel-title {
+            color: var(--mauritania-jaune);
+            font-size: 0.85em;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border-bottom: 2px solid var(--mauritania-vert);
+            padding-bottom: 2px;
+        }
+        .panel-title span { background: var(--mauritania-vert); color: white; padding: 1px 4px; border-radius: 10px; font-size: 0.6em; margin-left: auto; }
+
+        .wilaya-list { max-height: 200px; overflow-y: auto; }
+        .wilaya-item {
+            background: var(--bg-clair);
+            border-radius: 3px;
+            padding: 4px 6px;
+            margin-bottom: 2px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 0.75em;
+            transition: all 0.2s;
+        }
+        .wilaya-item:hover { background: #3d566e; }
+        .wilaya-item.selected { background: #3d566e; border-left-color: var(--mauritania-jaune); }
+
+        /* Stats électriques */
+        .electric-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            font-size: 0.7em;
+        }
+        .electric-stat-card {
+            background: var(--bg-clair);
+            padding: 5px;
+            border-radius: 3px;
+            text-align: center;
+        }
+        .electric-stat-value { color: var(--mauritania-jaune); font-size: 1.1em; font-weight: bold; }
+        .electric-stat-label { color: var(--text-muted); font-size: 0.65em; }
+
+        /* Tooltips et popups */
+        .wilaya-tooltip {
+            background: rgba(44, 62, 80, 0.95) !important;
+            border: 2px solid var(--mauritania-jaune) !important;
+            color: white !important;
+            font-size: 12px !important;
+            padding: 6px 10px !important;
+            border-radius: 6px !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+        }
+        .wilaya-tooltip::before { border-top-color: var(--mauritania-jaune) !important; }
+
+        .electric-tooltip {
+            background: rgba(44, 62, 80, 0.95) !important;
+            border: 2px solid #f39c12 !important;
+            color: white !important;
+            font-size: 11px !important;
+            padding: 5px 8px !important;
+            border-radius: 5px !important;
+        }
+
+        .leaflet-popup-content-wrapper {
+            background: rgba(44, 62, 80, 0.98) !important;
+            color: white !important;
+            border: 2px solid var(--mauritania-jaune) !important;
+            border-radius: 8px !important;
+        }
+        .leaflet-popup-tip { background: rgba(44, 62, 80, 0.98) !important; }
+
+        /* Animation */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeIn 0.3s ease; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-map-marked-alt"></i> الجمهورية الإسلامية الموريتانية <span style="font-size:0.6em;">SIG National</span></h1>
+            <div class="header-stats"><i class="fas fa-map"></i> 15 Wilayas · <i class="fas fa-bolt"></i> 300 MW</div>
+        </div>
+
+        <div class="main-content">
+        <div>
+            Réseau électrique complet incluant centrales, postes HT/MT/BT
+        </div>
+
+            <div class="map-container">
+                <div id="map"></div>
+                
+                <div class="main-toolbar">
+                    <div class="tool-group">
+                        <div class="tool-group-title"><i class="fas fa-layer-group"></i> Couches</div>
+                        <button class="tool-btn active" id="btn-toggle-wilayas"><i class="fas fa-map"></i> Wilayas</button>
+                        <button class="tool-btn active" id="btn-toggle-electric"><i class="fas fa-bolt"></i> Réseau électrique</button>
+                    </div>
+                    <div class="tool-group">
+                        <div class="tool-group-title"><i class="fas fa-eye"></i> Affichage</div>
+                        <button class="tool-btn" id="btn-toggle-labels"><i class="fas fa-tags"></i> Étiquettes</button>
+                        <button class="tool-btn" id="btn-reset-view"><i class="fas fa-expand"></i> Vue d'ensemble</button>
+                    </div>
+                </div>
+
+                <div class="coord-display">
+                    <div class="coord-proj"><i class="fas fa-globe"></i> WGS84</div>
+                    <div class="coord-values" id="mouse-coords">
+                        <span>Lat: --</span><span>Lon: --</span>
+                    </div>
+                </div>
+
+                <div class="legend" id="main-legend">
+                    <h4><i class="fas fa-list"></i> Légende</h4>
+                    <div class="legend-item"><div class="legend-color" style="background:#e74c3c;"></div> MR01 Hodh Chargui</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#e67e22;"></div> MR02 Hodh Gharbi</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#f1c40f;"></div> MR03 Assaba</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#2ecc71;"></div> MR04 Gorgol</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#1abc9c;"></div> MR05 Brakna</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#3498db;"></div> MR06 Trarza</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#9b59b6;"></div> MR07 Adrar</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#34495e;"></div> MR08 Dakhlet NDB</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#16a085;"></div> MR09 Tagant</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#d35400;"></div> MR10 Guidimaka</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#c0392b;"></div> MR11 Tiris Zemmour</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#27ae60;"></div> MR12 Inchiri</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#2980b9;"></div> MR13 NKT-Ouest</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#8e44ad;"></div> MR14 NKT-Nord</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#2c3e50;"></div> MR15 NKT-Sud</div>
+                    
+                    <div class="electric-legend-section" id="electric-legend-section">
+                        <h5><i class="fas fa-bolt"></i> Réseau Électrique</h5>
+                        <div class="legend-item"><span style="color:#e74c3c;font-size:14px;">━</span> HT 90 kV</div>
+                        <div class="legend-item"><span style="color:#e74c3c;font-size:12px;">- -</span> Futur HT</div>
+                        <div class="legend-item"><span style="color:#3498db;font-size:12px;">━</span> MT 15 kV</div>
+                        <div class="legend-item"><span style="color:#2ecc71;font-size:10px;">━</span> BT 400 V</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#e74c3c;"></div> Centrale</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#f1c40f;"></div> Solaire</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#3498db;"></div> Hydro</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#e74c3c;width:6px;height:6px;"></div> Poste HT</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#3498db;width:5px;height:5px;"></div> Poste MT</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#2ecc71;width:4px;height:4px;"></div> Poste BT</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-map"></i> Wilayas <span>15</span></div>
+                    <div class="wilaya-list" id="wilaya-list"></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-bolt"></i> Statistiques Électriques</div>
+                    <div class="electric-stats">
+                        <div class="electric-stat-card"><div class="electric-stat-value">300</div><div class="electric-stat-label">MW Capacité</div></div>
+                        <div class="electric-stat-card"><div class="electric-stat-value">1 435</div><div class="electric-stat-label">km Lignes HT</div></div>
+                        <div class="electric-stat-card"><div class="electric-stat-value">524</div><div class="electric-stat-label">Postes</div></div>
+                        <div class="electric-stat-card"><div class="electric-stat-value">500k</div><div class="electric-stat-label">Foyers</div></div>
+                    </div>
+                    <div style="margin-top:6px;font-size:0.65em;color:var(--text-muted);">
+                        🟢 En service · 🟡 Kiffa en construction
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-info-circle"></i> Info</div>
+                    <div style="font-size:0.7em;color:var(--text-muted);line-height:1.5;">
+                        <b>Survol</b> : info rapide<br>
+                        <b>Clic</b> : popup détaillé<br>
+                        <b>Clic Wilaya</b> : zoom + sélection
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // ==================== DONNÉES ====================
+        const WILAYA_COLORS = {
+            'MR01':'#e74c3c','MR02':'#e67e22','MR03':'#f1c40f','MR04':'#2ecc71','MR05':'#1abc9c',
+            'MR06':'#3498db','MR07':'#9b59b6','MR08':'#34495e','MR09':'#16a085','MR10':'#d35400',
+            'MR11':'#c0392b','MR12':'#27ae60','MR13':'#2980b9','MR14':'#8e44ad','MR15':'#2c3e50'
+        };
+        const WILAYA_NAMES = {
+            'MR01':'Hodh ech Chargui','MR02':'Hodh el Gharbi','MR03':'Assaba','MR04':'Gorgol',
+            'MR05':'Brakna','MR06':'Trarza','MR07':'Adrar','MR08':'Dakhlet Nouadhibou',
+            'MR09':'Tagant','MR10':'Guidimaka','MR11':'Tiris Zemmour','MR12':'Inchiri',
+            'MR13':'Nouakchott-Ouest','MR14':'Nouakchott-Nord','MR15':'Nouakchott-Sud'
+        };
+        const WILAYA_INFO = {
+            'MR01':{capitale:'Néma',population:'430 000',superficie:'182 700 km²'},
+            'MR02':{capitale:'Aïoun',population:'294 000',superficie:'53 400 km²'},
+            'MR03':{capitale:'Kiffa',population:'325 000',superficie:'36 600 km²'},
+            'MR04':{capitale:'Kaédi',population:'335 000',superficie:'13 600 km²'},
+            'MR05':{capitale:'Aleg',population:'312 000',superficie:'33 800 km²'},
+            'MR06':{capitale:'Rosso',population:'345 000',superficie:'67 800 km²'},
+            'MR07':{capitale:'Atar',population:'62 000',superficie:'215 300 km²'},
+            'MR08':{capitale:'Nouadhibou',population:'138 000',superficie:'22 300 km²'},
+            'MR09':{capitale:'Tidjikja',population:'80 000',superficie:'95 200 km²'},
+            'MR10':{capitale:'Sélibaby',population:'267 000',superficie:'10 300 km²'},
+            'MR11':{capitale:'Zouérate',population:'53 000',superficie:'252 900 km²'},
+            'MR12':{capitale:'Akjoujt',population:'20 000',superficie:'46 800 km²'},
+            'MR13':{capitale:'Tevragh Zeina',population:'366 000',superficie:'146 km²'},
+            'MR14':{capitale:'Dar Naim',population:'437 000',superficie:'210 km²'},
+            'MR15':{capitale:'Arafat',population:'441 000',superficie:'357 km²'}
+        };
+
+        // ==================== APPLICATION ====================
+        const App = {
+            map: null,
+            wilayaLayers: [],
+            wilayaLabels: [],
+            geoJsonLayer: null,
+            electricityLayers: {},
+            electricNetworkLoaded: false,
+            showLabels: true,
+            currentWilaya: null,
+
+            ELECTRIC_STYLES: {
+                PowerPlant: {
+                    Gas_Turbine:{color:'#e74c3c',fillColor:'#e74c3c',fillOpacity:0.25,weight:2},
+                    HFO_Diesel:{color:'#e67e22',fillColor:'#e67e22',fillOpacity:0.25,weight:2},
+                    Solar_PV_Utility_Scale:{color:'#f1c40f',fillColor:'#f1c40f',fillOpacity:0.25,weight:2},
+                    Interconnection_Substation:{color:'#3498db',fillColor:'#3498db',fillOpacity:0.25,weight:2}
+                },
+                Substation:{
+                    HT_Substation:{radius:8,color:'#e74c3c',fillColor:'#e74c3c',fillOpacity:0.9,weight:2},
+                    MT_Distribution_Substation:{radius:5,color:'#3498db',fillColor:'#3498db',fillOpacity:0.9,weight:2},
+                    BT_Distribution_Transformer:{radius:3,color:'#2ecc71',fillColor:'#2ecc71',fillOpacity:0.9,weight:1}
+                },
+                Line:{
+                    '90 kV':{color:'#e74c3c',weight:2.5,opacity:0.8},
+                    '90 kV future':{color:'#e74c3c',weight:2.5,opacity:0.5,dashArray:'8,8'},
+                    '15 kV':{color:'#3498db',weight:1.8,opacity:0.7},
+                    '400/230 V':{color:'#2ecc71',weight:1.2,opacity:0.6}
+                }
+            },
+
+            init: async function() {
+                this.initMap();
+                await this.loadWilayas();
+                await this.loadElectricityNetwork();
+                this.setupControls();
+                this.setupMouseCoordinates();
+                this.populateSidebar();
+            },
+
+            initMap: function() {
+                this.map = L.map('map', {
+                    center: [20.5, -11.5],
+                    zoom: 6,
+                    maxBounds: L.latLngBounds([14.0, -18.0], [28.0, -4.0]),
+                    zoomControl: true
+                });
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OSM',
+                    maxZoom: 18
+                }).addTo(this.map);
+            },
+
+            // ==================== CHARGEMENT WILAYAS ====================
+            loadWilayas: async function() {
+                try {
+                    const response = await fetch('GeoJson/wilaya_boundaries_from_docs.geojson');
+                    const data = await response.json();
+
+                    this.geoJsonLayer = L.geoJSON(data, {
+                        style: (f) => {
+                            const id = f?.properties?.id || '';
+                            return {
+                                color: WILAYA_COLORS[id] || '#666',
+                                weight: 1.5,
+                                fillColor: WILAYA_COLORS[id] || '#666',
+                                fillOpacity: 0.08,
+                                dashArray: '4 2'
+                            };
+                        },
+                        onEachFeature: (feature, layer) => {
+                            const id = feature.properties?.id || '';
+                            const name = WILAYA_NAMES[id] || id;
+                            const info = WILAYA_INFO[id] || {};
+                            layer.wilayaId = id;
+                            layer.wilayaName = name;
+                            this.wilayaLayers.push(layer);
+
+                            // Tooltip NON sticky - disparaît quand on quitte la zone
+                            layer.bindTooltip(`
+                                <div style="text-align:center;">
+                                    <strong style="color:${WILAYA_COLORS[id]};font-size:13px;">${name}</strong>
+                                    <br><small style="color:#bdc3c7;">${id}</small>
+                                </div>
+                            `, {
+                                sticky: false,  // ← IMPORTANT : non sticky
+                                direction: 'center',
+                                className: 'wilaya-tooltip',
+                                opacity: 0.95
+                            });
+
+                            // Popup riche au clic
+                            layer.bindPopup(() => this.generateWilayaPopup(id, name, info), {
+                                maxWidth: 320,
+                                className: 'animate-in'
+                            });
+
+                            // Survol : highlight
+                            layer.on('mouseover', (e) => {
+                                e.target.setStyle({ weight: 3, fillOpacity: 0.2 });
+                                e.target.bringToFront();
+                            });
+                            layer.on('mouseout', (e) => {
+                                if (this.currentWilaya?.id !== id) {
+                                    this.geoJsonLayer?.resetStyle(e.target);
+                                }
+                            });
+
+                            // Clic : sélection + zoom
+                            layer.on('click', (e) => {
+                                this.selectWilaya(id, layer);
+                                this.map.flyToBounds(layer.getBounds(), { padding: [40, 40], duration: 0.8 });
+                            });
+
+                            // Label au centre
+                            if (layer.getBounds) {
+                                const center = layer.getBounds().getCenter();
+                                const label = L.marker(center, {
+                                    icon: L.divIcon({
+                                        className: 'wilaya-label-marker',
+                                        html: `<div style="font-size:9px;color:${WILAYA_COLORS[id]};font-weight:bold;text-shadow:0 0 3px rgba(0,0,0,0.8);">${id}</div>`,
+                                        iconSize: [40, 14],
+                                        iconAnchor: [20, 7]
+                                    }),
+                                    interactive: false,
+                                    pane: 'tooltipPane'
+                                }).addTo(this.map);
+                                this.wilayaLabels.push(label);
+                            }
+                        }
+                    }).addTo(this.map);
+
+                    console.log('✅ Wilayas chargées:', this.wilayaLayers.length);
+                } catch (e) {
+                    console.error('❌ Wilayas:', e);
+                }
+            },
+
+            generateWilayaPopup: function(id, name, info) {
+                const color = WILAYA_COLORS[id] || '#666';
+                return `
+                    <div style="font-family:'Segoe UI',sans-serif;min-width:260px;">
+                        <div style="background:linear-gradient(135deg,${color},#1a2b3c);color:white;padding:12px;border-radius:6px 6px 0 0;margin:-14px -14px 10px -14px;">
+                            <h3 style="margin:0;font-size:16px;">📍 ${name}</h3>
+                            <span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:11px;">${id}</span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;">
+                            <div style="background:#2c3e50;padding:8px;border-radius:4px;text-align:center;">
+                                <div style="color:#bdc3c7;font-size:10px;">CAPITALE</div>
+                                <div style="color:#FFD700;font-weight:bold;">${info.capitale || 'N/A'}</div>
+                            </div>
+                            <div style="background:#2c3e50;padding:8px;border-radius:4px;text-align:center;">
+                                <div style="color:#bdc3c7;font-size:10px;">POPULATION</div>
+                                <div style="color:#FFD700;font-weight:bold;">${info.population || 'N/A'}</div>
+                            </div>
+                            <div style="background:#2c3e50;padding:8px;border-radius:4px;text-align:center;grid-column:1/-1;">
+                                <div style="color:#bdc3c7;font-size:10px;">SUPERFICIE</div>
+                                <div style="color:#FFD700;font-weight:bold;">${info.superficie || 'N/A'}</div>
+                            </div>
+                        </div>
+                    </div>`;
+            },
+
+            // ==================== CHARGEMENT RÉSEAU ÉLECTRIQUE ====================
+            loadElectricityNetwork: async function() {
+                try {
+                    const response = await fetch('GeoJson/electricity_network.geojson');
+                    const data = await response.json();
+
+                    this.electricityLayers = {
+                        powerPlants: L.layerGroup(),
+                        htSubstations: L.layerGroup(),
+                        mtSubstations: L.layerGroup(),
+                        btTransformers: L.layerGroup(),
+                        htLines: L.layerGroup(),
+                        mtLines: L.layerGroup(),
+                        btLines: L.layerGroup(),
+                        futureLines: L.layerGroup()
+                    };
+
+                    L.geoJSON(data, {
+                        style: (f) => this.getElectricFeatureStyle(f),
+                        pointToLayer: (f, latlng) => {
+                            const ft = f.properties?.feature_type;
+                            if (['PowerPlant','HT_Substation','Interconnection_Substation'].includes(ft)) {
+                                return L.marker(latlng, { icon: this.createElectricIcon(ft, f.properties?.plant_type) });
+                            }
+                            return L.circleMarker(latlng, this.getElectricPointStyle(ft));
+                        },
+                        onEachFeature: (feature, layer) => {
+                            const ft = feature.properties?.feature_type;
+                            // Assigner au groupe
+                            const groupMap = {
+                                'PowerPlant':'powerPlants','Interconnection_Substation':'powerPlants',
+                                'HT_Substation':'htSubstations','MT_Distribution_Substation':'mtSubstations',
+                                'BT_Distribution_Transformer':'btTransformers','Transmission_Line':'htLines',
+                                'Transmission_Line_Future':'futureLines','Distribution_Line_MT':'mtLines',
+                                'Distribution_Line_BT':'btLines'
+                            };
+                            if (groupMap[ft]) layer.addTo(this.electricityLayers[groupMap[ft]]);
+
+                            // Tooltip NON sticky
+                            const name = feature.properties?.name || 'Équipement';
+                            layer.bindTooltip(`<b>⚡ ${name}</b>`, {
+                                sticky: false,
+                                direction: 'top',
+                                className: 'electric-tooltip'
+                            });
+
+                            // Popup riche
+                            layer.bindPopup(() => this.generateElectricPopup(feature), { maxWidth: 320 });
+
+                            // Survol
+                            layer.on('mouseover', function() {
+                                this.openTooltip();
+                                if (this.setStyle) this.setStyle({ weight: 4, fillOpacity: 1 });
+                            });
+                            layer.on('mouseout', function() {
+                                this.closeTooltip();
+                                if (this.setStyle && feature.geometry.type !== 'LineString') {
+                                    const s = App.getElectricPointStyle(feature.properties?.feature_type);
+                                    this.setStyle({ weight: s.weight, fillOpacity: s.fillOpacity });
+                                }
+                            });
+                        }
+                    });
+
+                    Object.values(this.electricityLayers).forEach(g => g.addTo(this.map));
+                    this.electricNetworkLoaded = true;
+                    console.log('✅ Réseau électrique chargé');
+                } catch (e) {
+                    console.error('❌ Électrique:', e);
+                }
+            },
+
+            getElectricFeatureStyle: function(f) {
+                const ft = f.properties?.feature_type;
+                if (f.geometry.type === 'Polygon' && ft === 'PowerPlant')
+                    return this.ELECTRIC_STYLES.PowerPlant[f.properties?.plant_type] || {color:'#95a5a6',fillColor:'#95a5a6',fillOpacity:0.2,weight:1};
+                if (f.geometry.type === 'LineString') {
+                    if (ft === 'Transmission_Line_Future') return this.ELECTRIC_STYLES.Line['90 kV future'];
+                    if (ft === 'Transmission_Line') return this.ELECTRIC_STYLES.Line['90 kV'];
+                    if (ft === 'Distribution_Line_MT') return this.ELECTRIC_STYLES.Line['15 kV'];
+                    if (ft === 'Distribution_Line_BT') return this.ELECTRIC_STYLES.Line['400/230 V'];
+                }
+                return {color:'#95a5a6',weight:1};
+            },
+
+            getElectricPointStyle: function(ft) {
+                if (ft === 'HT_Substation') return this.ELECTRIC_STYLES.Substation.HT_Substation;
+                if (ft === 'MT_Distribution_Substation') return this.ELECTRIC_STYLES.Substation.MT_Distribution_Substation;
+                if (ft === 'BT_Distribution_Transformer') return this.ELECTRIC_STYLES.Substation.BT_Distribution_Transformer;
+                return {radius:5,color:'#95a5a6',fillColor:'#95a5a6',fillOpacity:0.8,weight:1};
+            },
+
+            createElectricIcon: function(ft, plantType) {
+                const colors = {
+                    'PowerPlant':'#e74c3c','Gas_Turbine':'#e74c3c','HFO_Diesel':'#e67e22',
+                    'Solar_PV_Utility_Scale':'#f1c40f','HT_Substation':'#e74c3c',
+                    'Interconnection_Substation':'#3498db'
+                };
+                const color = colors[plantType] || colors[ft] || '#95a5a6';
+                const icon = ft === 'PowerPlant' ? '🏭' : ft === 'Interconnection_Substation' ? '🔌' : '⚡';
+                const size = ft === 'PowerPlant' ? 22 : 16;
+                return L.divIcon({
+                    className: 'electric-icon',
+                    html: `<div style="width:${size}px;height:${size}px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 0 10px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;color:white;font-size:${size/2.5}px;">${icon}</div>`,
+                    iconSize: [size, size],
+                    iconAnchor: [size/2, size/2],
+                    popupAnchor: [0, -size/2]
+                });
+            },
+
+            generateElectricPopup: function(f) {
+                const p = f.properties || {};
+                const name = p.name || 'Équipement';
+                const status = p.operationalstatus || 'Inconnu';
+                const sc = status === 'In Service' ? '#27ae60' : status === 'Under Construction' ? '#f39c12' : '#e74c3c';
+                const ft = p.feature_type;
+                let html = `<div style="font-family:'Segoe UI',sans-serif;min-width:260px;">
+                    <div style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:white;padding:10px;border-radius:6px 6px 0 0;margin:-14px -14px 8px -14px;">
+                        <h4 style="margin:0 0 3px 0;">⚡ ${name}</h4>
+                        <span style="background:${sc};padding:2px 7px;border-radius:8px;font-size:10px;">${status.replace(/_/g,' ')}</span>
+                    </div>`;
+
+                if (ft === 'PowerPlant') {
+                    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:11px;">
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Type:</b> ${(p.plant_type||'').replace(/_/g,' ')}</div>
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Capacité:</b> ${p.total_capacity_mw||'N/A'} MW</div>
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Production:</b> ${p.annual_generation_gwh||'N/A'} GWh/an</div>
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Rendement:</b> ${p.efficiency_lhv_percent||p.efficiency_percent||'N/A'}%</div>
+                    </div>`;
+                } else if (ft?.includes('Substation')) {
+                    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:11px;">
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Tension:</b> ${p.voltage_level||'N/A'}</div>
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Charge:</b> ${p.load_percent||'N/A'}%</div>
+                    </div>`;
+                } else if (ft?.includes('Transmission') || ft?.includes('Line')) {
+                    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:11px;">
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Longueur:</b> ${p.route_length_km||(p.length_m?p.length_m/1000:'N/A')} km</div>
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Section:</b> ${p.cross_section_mm2||'N/A'} mm²</div>
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Tension:</b> ${p.voltage_level||'N/A'}</div>
+                        <div style="background:#2c3e50;padding:6px;border-radius:3px;"><b>Conducteur:</b> ${p.conductor_type||'N/A'}</div>
+                    </div>`;
+                }
+
+                html += `<div style="margin-top:6px;font-size:10px;color:#bdc3c7;border-top:1px solid #405d7a;padding-top:4px;">
+                    🏢 ${p.owner||'SOMELEC'} | 📅 ${p.commissioning_date||p.validfrom||'N/A'}
+                </div></div>`;
+                return html;
+            },
+
+            // ==================== SÉLECTION WILAYA ====================
+            selectWilaya: function(id, layer) {
+                this.currentWilaya = { id, name: WILAYA_NAMES[id] };
+                this.wilayaLayers.forEach(l => this.geoJsonLayer?.resetStyle(l));
+                layer.setStyle({ weight: 3, fillOpacity: 0.2, color: '#FFD700' });
+                document.querySelectorAll('.wilaya-item').forEach(i => i.classList.remove('selected'));
+                const si = document.querySelector(`.wilaya-item[data-wilaya="${id}"]`);
+                if (si) si.classList.add('selected');
+            },
+
+            selectWilayaFromList: function(id) {
+                const layer = this.wilayaLayers.find(l => l.wilayaId === id);
+                if (layer) {
+                    this.selectWilaya(id, layer);
+                    this.map.flyToBounds(layer.getBounds(), { padding: [40, 40], duration: 0.8 });
+                }
+            },
+
+            // ==================== CONTRÔLES ====================
+            setupControls: function() {
+                document.getElementById('btn-toggle-wilayas').addEventListener('click', function() {
+                    if (App.geoJsonLayer && App.map.hasLayer(App.geoJsonLayer)) {
+                        App.map.removeLayer(App.geoJsonLayer);
+                        App.wilayaLabels.forEach(l => App.map.removeLayer(l));
+                        this.classList.remove('active');
+                    } else {
+                        if (App.geoJsonLayer) App.map.addLayer(App.geoJsonLayer);
+                        if (App.showLabels) App.wilayaLabels.forEach(l => App.map.addLayer(l));
+                        this.classList.add('active');
+                    }
+                });
+
+                document.getElementById('btn-toggle-electric').addEventListener('click', function() {
+                    if (App.electricNetworkLoaded) {
+                        const groups = Object.values(App.electricityLayers);
+                        const visible = App.map.hasLayer(groups[0]);
+                        groups.forEach(g => visible ? App.map.removeLayer(g) : App.map.addLayer(g));
+                        this.classList.toggle('active', !visible);
+                    }
+                });
+
+                document.getElementById('btn-toggle-labels').addEventListener('click', function() {
+                    App.showLabels = !App.showLabels;
+                    App.wilayaLabels.forEach(l => App.showLabels ? App.map.addLayer(l) : App.map.removeLayer(l));
+                    this.classList.toggle('active', App.showLabels);
+                });
+                document.getElementById('btn-toggle-labels').classList.add('active');
+
+                document.getElementById('btn-reset-view').addEventListener('click', () => {
+                    App.map.setView([20.5, -11.5], 6);
+                    App.currentWilaya = null;
+                    App.wilayaLayers.forEach(l => App.geoJsonLayer?.resetStyle(l));
+                    document.querySelectorAll('.wilaya-item').forEach(i => i.classList.remove('selected'));
+                });
+            },
+
+            setupMouseCoordinates: function() {
+                this.map.on('mousemove', (e) => {
+                    document.getElementById('mouse-coords').innerHTML = 
+                        `<span>Lat: ${e.latlng.lat.toFixed(4)}°</span><span>Lon: ${e.latlng.lng.toFixed(4)}°</span>`;
+                });
+            },
+
+            populateSidebar: function() {
+                document.getElementById('wilaya-list').innerHTML = Object.entries(WILAYA_NAMES)
+                    .map(([id, name]) => `
+                        <div class="wilaya-item" data-wilaya="${id}" onclick="App.selectWilayaFromList('${id}')">
+                            <span style="color:${WILAYA_COLORS[id]}">●</span> ${id}: ${name}
+                        </div>`).join('');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => App.init());
+    </script>
+</body>
+</html>
