@@ -162,6 +162,20 @@ END $$;
 -- ============================================================
 -- GRANTS (Permissions)
 -- ============================================================
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'web_anon') THEN
+        CREATE ROLE web_anon NOLOGIN;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'web_user') THEN
+        CREATE ROLE web_user NOLOGIN;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'api_user') THEN
+        CREATE ROLE api_user NOLOGIN;
+    END IF;
+END;
+$$;
+
 -- Web anonymous (read-only)
 GRANT USAGE ON SCHEMA authentification TO web_anon;
 GRANT SELECT ON utilisateurs TO web_anon;

@@ -1,0 +1,29 @@
+# ============================================================
+# Dockerfile.postgres
+# Electricity Network GIS Platform - PostgreSQL with PostGIS
+# Version: 2.0.0 (avec support multilingue)
+# ============================================================
+
+FROM postgis/postgis:15-3.4
+
+# ============================================================
+# Metadata
+# ============================================================
+LABEL maintainer="GIS Team <gis-team@example.com>"
+LABEL description="PostgreSQL 15 with PostGIS 3.4 for Electricity Network GIS Platform"
+LABEL version="2.0.0"
+
+ENV TZ=Africa/Nouakchott
+
+# The PostgreSQL entrypoint runs these in lexical order on an empty data volume.
+WORKDIR /workspace/init-scripts
+COPY ./init-scripts/01-init-extensions.sql /docker-entrypoint-initdb.d/01-init-extensions.sql
+COPY ./init-scripts/02-schemas-creation.sql /docker-entrypoint-initdb.d/02-schemas-creation.sql
+COPY ./init-scripts/03-authentification.sql /docker-entrypoint-initdb.d/03-authentification.sql
+COPY ./init-scripts/04-electric-network.sql /docker-entrypoint-initdb.d/04-electric-network.sql
+COPY ./init-scripts/05-indexes-constraints.sql /docker-entrypoint-initdb.d/05-indexes-constraints.sql
+COPY ./init-scripts/06-views-functions.sql /docker-entrypoint-initdb.d/06-views-functions.sql
+COPY ./init-scripts/08-regional-access.sql /docker-entrypoint-initdb.d/08-regional-access.sql
+
+# Keep the relative path used by \copy in 08-regional-access.sql valid at init time.
+COPY ./1411-Donnees_recues/ministere_energies_petrole/03_valide/indicateurs_acces_electricite_wilaya_2024.csv /workspace/1411-Donnees_recues/ministere_energies_petrole/03_valide/indicateurs_acces_electricite_wilaya_2024.csv

@@ -12,6 +12,9 @@ SET search_path TO electrique, metier, iot, public;
 
 -- Catalogue des types d'assets (évolutif)
 CREATE TABLE electrique.AssetTypeCatalog (
+    id_object         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    date_saisie       TIMESTAMPTZ DEFAULT NOW(),
+    source            TEXT,
     asset_type_code   VARCHAR(50) PRIMARY KEY,
     domain            VARCHAR(50) NOT NULL,   -- 'Electric', 'Structure', 'Gas', etc.
     asset_group       VARCHAR(50) NOT NULL,
@@ -55,6 +58,7 @@ COMMENT ON COLUMN electrique.AssetAttribute.label_default IS 'Libellé par défa
 -- ============================================================
 
 CREATE TABLE electrique.StructureLine (
+    
     globalid            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     assetgroup          VARCHAR(50) NOT NULL,
     assettype           VARCHAR(50) NOT NULL,
@@ -69,7 +73,7 @@ CREATE TABLE electrique.StructureLine (
     height_m            DOUBLE PRECISION,
     installation_method VARCHAR(30),   -- 'Underground_Duct', 'OpenTrench', etc.
     burial_depth_cm     INTEGER,
-    shape               GEOMETRY(LineString, 2154), -- SRID adapté
+    shape               GEOMETRY(LineString, 4326), -- WGS 84; transform projected sources on import
     -- Code géographique (format: SXXXXYYYY)
     code_geo            VARCHAR(10) UNIQUE,        -- Code géographique de la localité
     -- Labels multilingues
@@ -82,6 +86,7 @@ CREATE TABLE electrique.StructureLine (
     last_maintenance    DATE,
     created_by          UUID,
     modified_by         UUID,
+    source              TEXT,
     CHECK (validto IS NULL OR validto >= validfrom)
 );
 
@@ -104,7 +109,10 @@ CREATE TABLE electrique.StructureJunction (
     height_m            DOUBLE PRECISION,
     ground_clearance_m  DOUBLE PRECISION,
     load_capacity_kg    DOUBLE PRECISION,
-    shape               GEOMETRY(Point, 2154),
+    shape               GEOMETRY(Point, 4326),
+    id_object           VARCHAR(50) UNIQUE,
+    source              TEXT,
+    date_saisie         TIMESTAMPTZ DEFAULT NOW(),
     -- Code géographique (format: SXXXXYYYY)
     code_geo            VARCHAR(10) UNIQUE,
     -- Labels multilingues
@@ -120,6 +128,9 @@ CREATE TABLE electrique.StructureJunction (
 );
 
 COMMENT ON TABLE electrique.StructureJunction IS 'Points nodaux : poteaux, regards, chambres';
+COMMENT ON COLUMN electrique.StructureJunction.id_object IS 'Identifiant de l''objet dans le fichier source';
+COMMENT ON COLUMN electrique.StructureJunction.source IS 'Fichier ou organisme source de l''objet';
+COMMENT ON COLUMN electrique.StructureJunction.date_saisie IS 'Horodatage UTC de la saisie ou de l''import';
 COMMENT ON COLUMN electrique.StructureJunction.code_geo IS 'Code géographique (format: SXXXXYYYY)';
 COMMENT ON COLUMN electrique.StructureJunction.label_fr IS 'Libellé en français';
 COMMENT ON COLUMN electrique.StructureJunction.label_ar IS 'Libellé en arabe';
@@ -137,6 +148,7 @@ CREATE TABLE electrique.StructureAssembly (
     label_default       VARCHAR(255),
     created_by          UUID,
     created_date        TIMESTAMP DEFAULT NOW(),
+    source              TEXT,
     PRIMARY KEY (assembly_globalid, component_globalid)
 );
 
@@ -150,7 +162,7 @@ CREATE TABLE electrique.StructureBoundary (
     boundary_type       VARCHAR(30) NOT NULL,
     name                VARCHAR(100),
     owner               VARCHAR(100),
-    shape               GEOMETRY(Polygon, 2154),
+    shape               GEOMETRY(Polygon, 4326),
     -- Code géographique (format: SXXXXYYYY)
     code_geo            VARCHAR(10) UNIQUE,
     -- Labels multilingues
@@ -158,7 +170,8 @@ CREATE TABLE electrique.StructureBoundary (
     label_ar            VARCHAR(255),
     label_default       VARCHAR(255),
     created_date        TIMESTAMP DEFAULT NOW(),
-    created_by          UUID
+    created_by          UUID,
+    source              TEXT
 );
 
 COMMENT ON TABLE electrique.StructureBoundary IS 'Zones administratives ou d''emprise';
@@ -195,7 +208,7 @@ CREATE TABLE electrique.ElectricLine (
     tower_type             VARCHAR(30),
     sag_m                  DOUBLE PRECISION,
     ground_clearance_m     DOUBLE PRECISION,
-    shape                  GEOMETRY(LineString, 2154),
+    shape                  GEOMETRY(LineString, 4326),
     -- Code géographique (format: SXXXXYYYY)
     code_geo               VARCHAR(10) UNIQUE,
     -- Labels multilingues
@@ -210,6 +223,7 @@ CREATE TABLE electrique.ElectricLine (
     last_maintenance       DATE,
     created_by             UUID,
     modified_by            UUID,
+    source                 TEXT,
     CHECK (validto IS NULL OR validto >= validfrom),
     CHECK (localite_type IN ('VILLE', 'COMMUNE', 'VILLAGE', 'HAMEAU', 'CAMPEMENT'))
 );
@@ -246,7 +260,7 @@ CREATE TABLE electrique.ElectricDevice (
     winding2_voltage_kv     DOUBLE PRECISION,
     rated_current_a         DOUBLE PRECISION,
     predictivemaint_flag    BOOLEAN DEFAULT FALSE,
-    shape                   GEOMETRY(Point, 2154),
+    shape                   GEOMETRY(Point, 4326),
     -- Code géographique (format: SXXXXYYYY)
     code_geo                VARCHAR(10) UNIQUE,
     -- Labels multilingues
@@ -261,6 +275,7 @@ CREATE TABLE electrique.ElectricDevice (
     last_maintenance        DATE,
     created_by              UUID,
     modified_by             UUID,
+    source                  TEXT,
     CHECK (validto IS NULL OR validto >= validfrom),
     CHECK (localite_type IN ('VILLE', 'COMMUNE', 'VILLAGE', 'HAMEAU', 'CAMPEMENT'))
 );
@@ -295,6 +310,7 @@ CREATE TABLE electrique.ElectricAssembly (
     code_adm            VARCHAR(50),   -- Code administratif de la localité
     created_date        TIMESTAMP DEFAULT NOW(),
     created_by          UUID,
+    source              TEXT,
     CHECK (validto IS NULL OR validto >= validfrom),
     CHECK (localite_type IN ('VILLE', 'COMMUNE', 'VILLAGE', 'HAMEAU', 'CAMPEMENT'))
 );
@@ -370,7 +386,10 @@ CREATE TABLE electrique.StructureContent (
     -- Labels multilingues
     label_fr            VARCHAR(255),
     label_ar            VARCHAR(255),
-    label_default       VARCHAR(255)
+    label_default       VARCHAR(255),
+    source              TEXT,
+    created_by          UUID,
+    created_date        TIMESTAMP DEFAULT NOW()
 );
 
 COMMENT ON TABLE electrique.StructureContent IS 'Association câbles ↔ fourreaux (multi-réseaux)';
@@ -389,7 +408,10 @@ CREATE TABLE electrique.StructuralAttachment (
     -- Labels multilingues
     label_fr            VARCHAR(255),
     label_ar            VARCHAR(255),
-    label_default       VARCHAR(255)
+    label_default       VARCHAR(255),
+    source              TEXT,
+    created_by          UUID,
+    created_date        TIMESTAMP DEFAULT NOW()
 );
 
 COMMENT ON TABLE electrique.StructuralAttachment IS 'Fixation des équipements sur les structures (poteaux, murs)';
@@ -411,6 +433,8 @@ CREATE TABLE electrique.TopologyErrorLog (
     resolved_timestamp  TIMESTAMP,
     resolved_by         VARCHAR(100),
     created_by          UUID,
+    source              TEXT,
+    created_date        TIMESTAMP DEFAULT NOW(),
     -- Labels multilingues
     label_fr            VARCHAR(255),
     label_ar            VARCHAR(255),
@@ -446,6 +470,7 @@ CREATE TABLE metier.OutageLog (
     label_default             VARCHAR(255),
     created_date              TIMESTAMP DEFAULT NOW(),
     created_by                UUID,
+    source                    TEXT,
     CHECK (outage_endtime IS NULL OR outage_endtime >= outage_starttime)
 );
 
@@ -484,6 +509,7 @@ CREATE TABLE metier.CustomerAccount (
     modified_date             TIMESTAMP DEFAULT NOW(),
     created_by                UUID,
     modified_by               UUID,
+    source                    TEXT,
     CHECK (localite_type IN ('VILLE', 'COMMUNE', 'VILLAGE', 'HAMEAU', 'CAMPEMENT'))
 );
 
@@ -510,6 +536,7 @@ CREATE TABLE metier.InterventionLog (
     actual_end_date           TIMESTAMP,
     duration_hours            DOUBLE PRECISION GENERATED ALWAYS AS (EXTRACT(EPOCH FROM (actual_end_date - actual_start_date))/3600) STORED,
     status                    VARCHAR(20),
+    technician_id             UUID REFERENCES authentification.utilisateurs(user_uuid),
     technician_name           VARCHAR(100),
     technician_team           VARCHAR(100),
     description_work          TEXT,
@@ -526,6 +553,7 @@ CREATE TABLE metier.InterventionLog (
     label_default             VARCHAR(255),
     created_date              TIMESTAMP DEFAULT NOW(),
     created_by                UUID,
+    source                    TEXT,
     CHECK (actual_end_date IS NULL OR actual_end_date >= actual_start_date)
 );
 
@@ -543,7 +571,7 @@ CREATE TABLE metier.ConnectionRequest (
     request_date                DATE NOT NULL,
     request_type                VARCHAR(30),
     customer_id                 UUID REFERENCES metier.CustomerAccount(customer_id),
-    requested_location          GEOMETRY(Point, 2154),
+    requested_location          GEOMETRY(Point, 4326),
     nearest_service_point_globalid UUID,
     nearest_transformer_distance_m DOUBLE PRECISION,
     status                      VARCHAR(30),
@@ -560,6 +588,7 @@ CREATE TABLE metier.ConnectionRequest (
     label_fr                    VARCHAR(255),
     label_ar                    VARCHAR(255),
     label_default               VARCHAR(255),
+    source                      TEXT,
     -- Type de localité administratif
     localite_type               VARCHAR(30),  -- 'VILLE', 'COMMUNE', 'VILLAGE', 'HAMEAU', 'CAMPEMENT'
     code_adm                    VARCHAR(50),   -- Code administratif de la localité
@@ -593,7 +622,12 @@ CREATE TABLE iot.TelemetryReading (
     -- Labels multilingues
     label_fr            VARCHAR(255),
     label_ar            VARCHAR(255),
-    label_default       VARCHAR(255)
+    label_default       VARCHAR(255),
+    created_date        TIMESTAMP DEFAULT NOW(),
+    modified_date       TIMESTAMP DEFAULT NOW(),
+    created_by          UUID,
+    modified_by         UUID,
+    source              TEXT
 );
 
 COMMENT ON TABLE iot.TelemetryReading IS 'Données de télémétrie IoT (courant, tension, puissance, température)';
@@ -619,6 +653,11 @@ CREATE TABLE iot.Alert (
     label_fr            VARCHAR(255),
     label_ar            VARCHAR(255),
     label_default       VARCHAR(255),
+    source              TEXT,
+    created_date        TIMESTAMP DEFAULT NOW(),
+    modified_date       TIMESTAMP DEFAULT NOW(),
+    created_by          UUID,
+    modified_by         UUID,
     CHECK (cleared_timestamp IS NULL OR cleared_timestamp >= timestamp)
 );
 
@@ -643,7 +682,11 @@ CREATE TABLE public.CodeGeoMapping (
     localite_default    VARCHAR(255),
     code_adm            VARCHAR(50),
     localite_type       VARCHAR(30) CHECK (localite_type IN ('VILLE', 'COMMUNE', 'VILLAGE', 'HAMEAU', 'CAMPEMENT')),
-    created_date        TIMESTAMP DEFAULT NOW()
+    created_date        TIMESTAMP DEFAULT NOW(),
+    modified_date       TIMESTAMP DEFAULT NOW(),
+    created_by          UUID,
+    modified_by         UUID,
+    source              TEXT
 );
 
 COMMENT ON TABLE public.CodeGeoMapping IS 'Correspondance des codes géographiques avec les coordonnées';
@@ -786,7 +829,7 @@ DECLARE
 BEGIN
     -- Vérifier si la géométrie existe et si le code_geo est NULL
     IF NEW.shape IS NOT NULL AND (NEW.code_geo IS NULL OR NEW.code_geo = '') THEN
-        -- Extraire la longitude et latitude selon le type de géométrie
+        -- Ces colonnes stockent WGS 84 longitude/latitude (SRID 4326).
         IF TG_TABLE_NAME = 'ElectricLine' OR TG_TABLE_NAME = 'StructureLine' THEN
             -- Pour les lignes, prendre le point de départ
             lon := ST_X(ST_StartPoint(NEW.shape));

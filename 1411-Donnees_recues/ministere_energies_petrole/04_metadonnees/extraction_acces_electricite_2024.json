@@ -1,0 +1,172 @@
+{
+  "title": "Extraction des indicateurs d'accès à l'électricité par wilaya",
+  "reference_year": 2024,
+  "date_saisie": "2026-09-28T18:38:02Z",
+  "source_organization": "DGENER, Ministère du Pétrole, des Mines et de l'Energie",
+  "extraction_method": "PyMuPDF text layer; OCR not required",
+  "source_pdf_count": 12,
+  "wilaya_count": 15,
+  "covered_admin_codes": [
+    "MR01",
+    "MR02",
+    "MR03",
+    "MR04",
+    "MR05",
+    "MR06",
+    "MR07",
+    "MR08",
+    "MR09",
+    "MR10",
+    "MR11",
+    "MR12"
+  ],
+  "missing_admin_codes": [
+    "MR13",
+    "MR14",
+    "MR15"
+  ],
+  "field_semantics": {
+    "id_object": "Stable identifier composed from administrative code and reference year.",
+    "access_rate_pct": "Printed access rate; denominator not stated by source.",
+    "electrified_localities": "Printed count; null when the map has no count.",
+    "localities_population_over_300": "Count of localities over 300 inhabitants.",
+    "localities_population_over_500": "Count of localities over 500 inhabitants.",
+    "localities_population_over_1000": "Count of localities over 1000 inhabitants.",
+    "geometry_wkt": "Polygon copied from the administrative boundary source, EPSG:4326.",
+    "source": "Relative PDF path; null when no regional PDF was supplied.",
+    "date_saisie": "UTC timestamp at which this extraction was generated."
+  },
+  "quality_notes": [
+    "All 12 supplied PDFs are one-page maps with extractable text.",
+    "Extracted figures require visual review against their source page.",
+    "Three Nouakchott wilayas have no corresponding PDF in the supplied folder."
+  ],
+  "source_documents": [
+    {
+      "source_pdf": "ADRAR 2024.pdf",
+      "admin_code": "MR07",
+      "wilaya_name": "Adrar",
+      "page_count": 1,
+      "text_characters": 973,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "ASSABA 2024.pdf",
+      "admin_code": "MR03",
+      "wilaya_name": "Assaba",
+      "page_count": 1,
+      "text_characters": 923,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "BRAKNA 2024.pdf",
+      "admin_code": "MR05",
+      "wilaya_name": "Brakna",
+      "page_count": 1,
+      "text_characters": 1052,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "DAKHLET NOUADHIBOU 2024.pdf",
+      "admin_code": "MR08",
+      "wilaya_name": "Dakhlet Nouadhibou",
+      "page_count": 1,
+      "text_characters": 764,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": [
+        "electrified_localities"
+      ]
+    },
+    {
+      "source_pdf": "GORGOL 2024.pdf",
+      "admin_code": "MR04",
+      "wilaya_name": "Gorgol",
+      "page_count": 1,
+      "text_characters": 1136,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "GUIDIMAGHA 2024.pdf",
+      "admin_code": "MR10",
+      "wilaya_name": "Guidimaka",
+      "page_count": 1,
+      "text_characters": 1094,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "HODH CHARGUI 2024.pdf",
+      "admin_code": "MR01",
+      "wilaya_name": "Hodh ech Chargui",
+      "page_count": 1,
+      "text_characters": 954,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "HODH GHARBY 2024 (1).pdf",
+      "admin_code": "MR02",
+      "wilaya_name": "Hodh el Gharbi",
+      "page_count": 1,
+      "text_characters": 985,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "INCHIRI 2024.pdf",
+      "admin_code": "MR12",
+      "wilaya_name": "Inchiri",
+      "page_count": 1,
+      "text_characters": 713,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "TAGANT 2024.pdf",
+      "admin_code": "MR09",
+      "wilaya_name": "Tagant",
+      "page_count": 1,
+      "text_characters": 815,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "TIRIS 2024.pdf",
+      "admin_code": "MR11",
+      "wilaya_name": "Tiris Zemmour",
+      "page_count": 1,
+      "text_characters": 723,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    },
+    {
+      "source_pdf": "TRARZA 2024.pdf",
+      "admin_code": "MR06",
+      "wilaya_name": "Trarza",
+      "page_count": 1,
+      "text_characters": 936,
+      "text_layer_present": true,
+      "extraction_method": "pymupdf_text_layer",
+      "fields_missing": []
+    }
+  ],
+  "outputs": [
+    "1411-Donnees_recues/ministere_energies_petrole/03_valide/indicateurs_acces_electricite_wilaya_2024.csv",
+    "1411-Donnees_recues/ministere_energies_petrole/03_valide/acces_electricite_wilaya_2024.geojson"
+  ]
+}

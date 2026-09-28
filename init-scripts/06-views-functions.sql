@@ -95,12 +95,12 @@ BEGIN
         ed.globalid,
         ed.assettype,
         ed.capacity_kva,
-        ST_Distance(ed.shape, ST_SetSRID(ST_MakePoint(lon, lat), 4326)::GEOMETRY) AS distance_m
+        ST_Distance(ed.shape::GEOGRAPHY, ST_SetSRID(ST_MakePoint(lon, lat), 4326)::GEOGRAPHY) AS distance_m
     FROM electrique.ElectricDevice ed
     WHERE ed.assetgroup = 'Transformer'
       AND ed.operationalstatus = 'In Service'
       AND ed.validto IS NULL
-      AND ST_DWithin(ed.shape, ST_SetSRID(ST_MakePoint(lon, lat), 4326)::GEOMETRY, max_distance_m)
+    AND ST_DWithin(ed.shape::GEOGRAPHY, ST_SetSRID(ST_MakePoint(lon, lat), 4326)::GEOGRAPHY, max_distance_m)
     ORDER BY distance_m
     LIMIT 10;
 END;

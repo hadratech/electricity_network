@@ -3,8 +3,8 @@
   "crs": {
     "type": "name",
     "properties": {
-      "name": "urn:ogc:def:crs:EPSG::2154",
-      "description": "Mauritania 99 / UTM zone 28N"
+      "name": "urn:ogc:def:crs:EPSG::4326",
+      "description": "WGS 84 longitude/latitude; verified against coordinate values"
     }
   },
   "metadata": {
@@ -41,6 +41,15 @@
         "administrative": 1000,
         "total_households": 500000
       }
+    },
+    "regional_access_layer": {
+      "year": 2024,
+      "geojson": "../1411-Donnees_recues/ministere_energies_petrole/03_valide/acces_electricite_wilaya_2024.geojson",
+      "normalized_csv": "../1411-Donnees_recues/ministere_energies_petrole/03_valide/indicateurs_acces_electricite_wilaya_2024.csv",
+      "join_key": "admin_code",
+      "covered_admin_codes": ["MR01", "MR02", "MR03", "MR04", "MR05", "MR06", "MR07", "MR08", "MR09", "MR10", "MR11", "MR12"],
+      "missing_admin_codes": ["MR13", "MR14", "MR15"],
+      "note": "Wilaya-level indicators remain separate from individual asset features."
     }
   },
   "features": [
@@ -160,6 +169,14 @@
           "lcoe_usd_kwh": 0.095
         },
         "created_date": "2017-06-01T08:00:00Z"
+        ,"code_geo": null
+        ,"label_fr": null
+        ,"label_ar": null
+        ,"label_default": null
+        ,"localite_type": null
+        ,"code_adm": null
+        ,"modified_date": null
+        ,"last_maintenance": null
       }
     },
     {
@@ -281,6 +298,14 @@
           "lcoe_usd_kwh": 0.145
         },
         "created_date": "2009-12-01T10:00:00Z"
+        ,"code_geo": null
+        ,"label_fr": null
+        ,"label_ar": null
+        ,"label_default": null
+        ,"localite_type": null
+        ,"code_adm": null
+        ,"modified_date": null
+        ,"last_maintenance": null
       }
     },
     {
@@ -753,6 +778,14 @@
         "peak_load_mva": 7.2,
         "off_peak_load_mva": 3.5,
         "created_date": "2017-11-01T09:00:00Z"
+        ,"code_geo": null
+        ,"label_fr": null
+        ,"label_ar": null
+        ,"label_default": null
+        ,"localite_type": null
+        ,"code_adm": null
+        ,"modified_date": null
+        ,"last_maintenance": null
       }
     },
     {
@@ -844,6 +877,13 @@
         "last_maintenance": "2024-01-15",
         "next_maintenance": "2024-07-15",
         "created_date": "2020-01-20T08:30:00Z"
+        ,"code_geo": null
+        ,"label_fr": null
+        ,"label_ar": null
+        ,"label_default": null
+        ,"localite_type": null
+        ,"code_adm": null
+        ,"modified_date": null
       }
     },
     {
@@ -964,6 +1004,14 @@
           "availability_percent": 99.91
         },
         "created_date": "2004-08-01T08:00:00Z"
+        ,"code_geo": null
+        ,"label_fr": null
+        ,"label_ar": null
+        ,"label_default": null
+        ,"localite_type": null
+        ,"code_adm": null
+        ,"modified_date": null
+        ,"last_maintenance": null
       }
     },
     {
@@ -1057,6 +1105,14 @@
           "longest_outage_hours": 12
         },
         "created_date": "2011-03-15T09:00:00Z"
+        ,"code_geo": null
+        ,"label_fr": null
+        ,"label_ar": null
+        ,"label_default": null
+        ,"localite_type": null
+        ,"code_adm": null
+        ,"modified_date": null
+        ,"last_maintenance": null
       }
     },
     {
@@ -1231,6 +1287,13 @@
         },
         "last_maintenance": "2023-12-01",
         "created_date": "2020-02-01T10:00:00Z"
+        ,"code_geo": null
+        ,"label_fr": null
+        ,"label_ar": null
+        ,"label_default": null
+        ,"localite_type": null
+        ,"code_adm": null
+        ,"modified_date": null
       }
     },
     {
