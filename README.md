@@ -1,6 +1,6 @@
 # Electricity Network Project
 
-This project manages and analyzes electricity network data for a specific region. It includes geospatial data, SQL initialization scripts, and documentation in multiple languages.
+This project manages and analyzes (water, building, ...,electricity) network data for a specific region. It includes geospatial data, SQL initialization scripts, and documentation in multiple languages.
 
 ## Project Structure
 
